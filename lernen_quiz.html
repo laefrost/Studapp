@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html class="nojs html css_verticalspacer" lang="de-DE">
+ <head>
+
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+	<meta name="generator" content="2018.1.0.386"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+	<script src="js-quiz-lernen.js"></script>
+	<script src="parseJSON.js"></script> 
+	<script src="bundle.js"></script> 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  
+	<title>Quiz-Lernen</title>
+  
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="styles/quiz-lernen.css" id="pagesheet"/>
+	<link href="styles/output.css" type="text/css" rel="stylesheet" />
+  
+ </head>
+ <body>
+ <div class="py-20">
+      <div class="container mx-auto px-6">
+        <h2 class="text-4xl font-bold mb-2 text-white" id="h2_lernen">
+          Lernen
+        </h2>
+		<h3 class="text-2xl mb-8 text-gray-200" id = "h3_lernen">
+        </h3>
+      </div>
+    </div>
+
+	<section class="container mx-auto px-6 p-10">
+		<div id ="box_lern">
+		<div class="flex flex-wrap">
+			<div class="w-full" id = "div_question">
+				<p id="p_question"></p>
+			</div>
+		</div>
+		<div class="flex flex-wrap" id="div_answer">
+		</div>
+		
+		<button class="btn_weiter text-white font-bold py-2 px-4 rounded-full" id="btn_weiter">
+		   <p id="nextButtonText">Abgeben</p>
+        </button>
+		</div>
+       
+    </section>
+	<script type="text/javascript">
+		$(document).ready(function(){
+   
+			var sValue = sessionStorage.getItem("scat"); 
+			var cValue = sessionStorage.getItem("cat"); 
+			console.log("Hallo"+sValue + cValue); 
+			var h2 = document.getElementById("h2_lernen"); 
+			var h3 = document.getElementById("h3_lernen"); 
+			h2.innerHTML = cValue; 
+			h3.innerHTML = sValue; 
+			
+			
+			$.ajax({
+				type: 'GET',
+				url: 'https://projektseminarlfrb.herokuapp.com/questions',
+				data: { 
+				"category_name": cValue, 
+				"subcategory_name": sValue
+				},
+				dataType: 'json',
+				success: function (data) {
+					//let questions = JSON.stringify(data); 
+					console.log(data); 
+					if(data == undefined || data == null || data.length == 0) {
+					//alert('Zu dieser Kategorie gibt es keine Fragen!'); 
+					//window.location.href = './lernen.html'; 
+					} else {
+					generateArray(data);
+					}
+				},
+				error: function (result){ 
+					console.log(result);
+					alert("Es gab einen Fehler beim Laden der Daten!"); 
+				}
+	
+			}) 
+		})
+
+	function generateArray(data){
+		var questions; 
+		parseLearningQuestions(data, function(response) {
+			questions = response;
+			//checkSaveArray(jsonFile, questions);+
+			console.log(questions);
+			init(questions); 
+		});
+	} 
+
+/*function checkSaveArray(jsonFile, questions){
+  var saveArray;
+  if (localStorage.getItem('saveArrayQuiz') !== null) {
+    saveArray = JSON.parse(localStorage.getItem("saveArrayQuiz"));
+    init(questions, saveArray);
+  }else{
+    generateSaveArray(jsonFile, function(response) {
+      saveArray = response;
+      init(questions, saveArray);
+    });
+  }
+} */
+
+
+
+	function init(questions){
+		console.log('init');
+  
+		var currentQuestion = 1;
+		startQuestion('div_answer', questions);
+}
+
+</script>
+  </body>
+</html>

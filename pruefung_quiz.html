@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html class="nojs html css_verticalspacer" lang="de-DE">
+ <head>
+
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+	<meta name="generator" content="2018.1.0.386"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+	<script src="js-quiz-pruefung.js"></script>
+	<script src="parseJSON.js"></script> 
+	<script src="bundle.js"></script> 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  
+	<title>Quiz-Lernen</title>
+  
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="styles/quiz-pruefung.css" id="pagesheet"/>
+	<link href="styles/output.css" type="text/css" rel="stylesheet" />
+  
+ </head>
+ <body>
+ <div class="py-20">
+      <div class="container mx-auto px-6">
+       <h2 class="text-4xl font-bold mb-2 text-white">
+          Prüfung
+        </h2>
+		<h3 class="text-2xl mb-8 text-gray-200" id = "h3_time">
+			<div id="div_clock"> </div>
+        </h3>
+		<h4 class="text-2xl mb-8 text-gray-200" id = "h4_numb_questions">
+			<div id="div_questionCount"> </div>
+		</h4>
+	  </div>
+    </div>
+	<section class="container mx-auto px-6 p-10">
+		<div id = "box_pru">
+		<div class="flex flex-wrap">
+			<div class="w-full" id = "div_question">
+				<p id="p_question"></p>
+			</div>
+		</div>
+		<div class="flex flex-wrap" id="div_answer">
+		</div>
+		<div>
+		<button class="btn_weiter text-white font-bold py-2 px-4 rounded-full" id="btn_prue">
+		   <p id="nextButtonText">Weiter</p>
+        </button>
+		</div>
+		
+		<button class="btn_back text-white font-bold py-2 px-4 rounded-full" id="btn_back">
+		   <p id="backBtnText">Zurück</p>
+        </button>
+		</div>
+       
+    </section>
+	<script type="text/javascript">
+		$(document).ready(function(){
+	
+			$.ajax({
+				type: 'GET',
+				url: 'https://projektseminarlfrb.herokuapp.com/categorys',
+				dataType: 'json',
+				success: function (data) {
+					//let questions = JSON.stringify(data); 
+					//console.log(data); 
+					if(data == undefined || data == null || data.length == 0) {
+						alert('Fehler beim Laden'); 
+						window.location.href = './index.html'; 
+					} else {
+						generateArray(data);
+						//console.log(result);
+					}
+				},
+				error: function (result){ 
+					console.log(result);
+					alert("Es gab einen Fehler beim Laden der Daten!"); 
+	
+			}}); 
+		})
+	
+
+function generateArray(jsonFile){
+  var maxQuestion = 10;
+  parseTestQuestions(jsonFile, maxQuestion, function(response) {
+    questions = response;
+	console.log("Fraaaaaaaager"); 
+	console.log(questions); 
+    init(questions, maxQuestion);
+  });
+}
+
+
+
+function init(questions, maxQuestion){
+  console.log('init');
+
+  var currentQuestion = 1;
+  //var answers = dummyArray(maxQuestion);
+  //replace_question_text();
+  
+  var time_in_minutes = 10;
+  start_countdown('div_clock' ,time_in_minutes);
+  var currentQuestion = 1;
+  buttonClick('div_questionCount', currentQuestion, maxQuestion, questions);
+  console.log(questions); 
+  fillAnswers('div_answer', questions[0][1].length, questions, 0);
+}
+
+/*function checkSaveArray(jsonFile, questions){
+  var saveArray;
+  if (localStorage.getItem('saveArrayQuiz') !== null) {
+    saveArray = JSON.parse(localStorage.getItem("saveArrayQuiz"));
+    init(questions, saveArray);
+  }else{
+    generateSaveArray(jsonFile, function(response) {
+      saveArray = response;
+      init(questions, saveArray);
+    });
+  }
+} */
+
+</script>
+  </body>
+</html>

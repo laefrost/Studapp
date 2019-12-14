@@ -1,0 +1,117 @@
+<!DOCTYPE html> 
+  <!ATTLIST tag cat CDATA #IMPLIED>
+<head>
+	<link href="styles/output.css" type="text/css" rel="stylesheet" />
+	<link href="styles/lernen.css" type="text/css" rel="stylesheet" />
+	 <!--<link rel="stylesheet" href="https://unpkg.com/tailwindcss/dist/tailwind.min.css" />-->
+	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	 <script src="lernen.js"></script>
+</head>
+<body>
+<div class="py-20">
+      <div class="container mx-auto px-6">
+        <h2 class="text-4xl font-bold mb-2 text-white">
+          Katgeorien
+        </h2>
+		<h3 class ="text-2xl mb-8 text-white"> Bitte wählen Sie eine Kategorie aus! </h3>
+      </div>
+    </div>
+	
+	<section class="container mx-auto px-6 p-10">
+	<!--<form>
+		<div id="div_list">
+			<select name="lernen" id="select_lernen">
+			</select>
+		</div>
+	</form> -->
+      <ul id="ul_list" class="lernen">
+	  </ul>
+	   <button class="btn_weiter text-white font-bold py-2 px-4 rounded-full" id="btn_lernen">
+		   <a>Start</a>
+        </button>
+    </section>
+	<script>
+		$(document).ready(function() {
+	
+	$.ajax({
+  type: 'GET',
+  url: 'https://projektseminarlfrb.herokuapp.com/categorys',
+  dataType: 'json',
+  success: function (data) {
+    var names = data
+    console.log(data)
+	loadData(data);
+	
+	//custom code
+		var menuItemName = "subMenu";
+		var catItemName = "newCategory"; 
+		//startRegulär Button class = buttonStartRClass; 
+		var buttonClass = "btn_weiter";
+		getAllMenuItems(menuItemName,catItemName, buttonClass);
+  } 
+}) 
+});
+
+		function loadData(data) {
+			let json = JSON.parse(JSON.stringify(data)); 
+			//console.log(json.length); 
+			createElements(json); 
+		}
+function createElements(json) {
+	
+			var select = document.getElementById('ul_list'); 
+			
+			for ( var i = 0; i <json.length ; i++) {
+				console.log("cat created"); 
+				var newCategory = document.createElement("li");
+				//var div1 = document.createElement("div"); 
+				//var div2 = document.createElement("div"); 
+				var p1 = document.createElement("p"); 
+				
+				newCategory.className = "newCategory"; 
+				//div1.className = "div1";
+				//div2.className = "div2"; 
+				/*div1.setAttribute("data-muse-uid", "U752");  
+				div1.setAttribute("data-muse-type", "txt_frame"); */
+				
+				//var div3 = document.createElement("div"); 
+				//var div4 = document.createElement("div"); 
+				var ul2 = document.createElement("ul");
+				
+				
+				//div3.className = "div3"; 
+				//div4.className = "div4"; 
+				/*div4.setAttribute("data-muse-uid","U754");  
+				div4.setAttribute("data-muse-type","txt_frame");  
+				div4.setAttribute("data-IBE-flags", "txtStyleSrc"); */ 
+				ul2.className= "ul2"; 
+				
+				//console.log("i: "+ i); 
+				newCategory.innerHTML = json[i].category_name; 
+				
+				
+				select.appendChild(newCategory); 
+				//newCategory.appendChild(div1);
+				//div1.appendChild(div2); 
+				//newCategory.appendChild(p1);
+				
+				newCategory.appendChild(ul2); 
+				//div3.appendChild(div4); 
+				//div4.appendChild(ul2); 
+				
+				for (var j = 0; j < json[i].sub_categories.length; j++) {
+					//var newdiv = document.createElement("ul");
+					var newSubcategory = document.createElement("li");
+					//console.log(json.categories[0].sub_categories[0].sub_category_name);
+					newSubcategory.innerHTML = json[i].sub_categories[j].subcategory_name; 
+					newSubcategory.className = "subMenu"; 
+					newSubcategory.setAttribute("cat", json[i].category_name); 
+					console.log(newSubcategory.getAttribute("cat")); 
+					console.log("Subcat created"); 
+					ul2.appendChild(newSubcategory); 
+				};
+			}
+		}
+	</script>
+	
+</body>
