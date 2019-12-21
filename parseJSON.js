@@ -17,10 +17,40 @@ function loadJSON(callback) {
 	console.log(sessionStorage.getItem("quiz-lernen-selected")); 
  }
 
+
+ /*async function generateExamQuestions(jsonFile, maxQuestions, callback) {
+	var questions = new Array();
+	var json; 
+	
+	  check: for (var i = 0; i < maxQuestions; i++) {
+		  //choose rnd Category
+		var rndCat = Math.floor(Math.random() * jsonFile.length);
+		console.log(jsonFile[rndCat].sub_categories.length);
+		//choose rnd subCat
+		var subCatLength = jsonFile[rndCat].sub_categories.length;
+		var rndSubCat = Math.floor(Math.random() * subCatLength);
+		var cValue = jsonFile[rndCat].category_name; 
+		var sValue = jsonFile[rndCat].sub_categories[rndSubCat].subcategory_name; 
+		
+		json = await doAjax(cValue, sValue,i); 
+		
+		if(json.length === 0) {
+			i--; 
+			continue check; 
+		} else {
+		
+		var questLength = json.length;
+			var rndQuest =  Math.floor(Math.random() * questLength);
+			console.log(json); 
+			console.log(rndQuest);
+
+ }*/
 async function parseTestQuestions(jsonFile, maxQuestions, callback){
 
 var questions = new Array();
 var json; 
+
+console.log("JsonFile : " + jsonFile); 
 
   check: for (var i = 0; i < maxQuestions; i++) {
   	//choose rnd Category
@@ -43,8 +73,10 @@ var json;
 		var rndQuest =  Math.floor(Math.random() * questLength);
 		console.log(json); 
 		console.log(rndQuest);
+
+		questions[i] = json[rndQuest]; 
     
-		questions[i] = new Array();
+		/*questions[i] = new Array();
 		questions[i][0] = json[rndQuest].question;
 		questions[i][1] = new Array();
 
@@ -61,121 +93,17 @@ var json;
 				questions[i][1][j][2] = false;
 			}
 				questions[i][1][j][4] = false;
-		}
+		}*/
 	}
-	
-	/*doAjax(cValue, sValue, i)
-      .then(json => {
-      //console.log('json: ', json);
-	  if (json == undefined || json == null || json.length === 0) {
-		  console.log("Json undefined"); 
-		  i--; 
-		  continue check; 
-	  } else {
-      console.log(json);
-		
-		var questLength = json.length;
-		var rndQuest =  Math.floor(Math.random() * questLength);
-		console.log(json); 
-		console.log(rndQuest);
-    
-		questions[i] = new Array();
-		questions[i][0] = json[rndQuest].question;
-		questions[i][1] = new Array();
-
-		var countAnswers = json[rndQuest].answers.length;
-
-		for (var j = 0; j < countAnswers; j++){	
-			questions[i][1][j] = new Array();
-			questions[i][1][j][0] = j;
-			questions[i][1][j][1] = json[rndQuest].answers[j].aText;
-			var questToF = json[rndQuest].answers[j].trueOrFalse;
-			if(questToF){
-				questions[i][1][j][2] = true;
-			} else{
-				questions[i][1][j][2] = false;
-			}
-				questions[i][1][j][4] = false;
-		}
-	  }
-
-	  });*/
-	
-	/*$.when(doAjax(cValue, sValue)).done(function(aQuestions){
-		console.log(aQuestions);
-		
-		var questLength = aQuestions.length;
-		var rndQuest =  Math.floor(Math.random() * questLength);
-		console.log(aQuestions); 
-		console.log(rndQuest);
-    
-		prueQuestions[i] = new Array();
-		prueQuestions[i][0] = aQuestions[rndQuest].question;
-		prueQuestions[i][1] = new Array();
-
-		var countAnswers = aQuestions[rndQuest].answers.length;
-
-		for (var j = 0; j < countAnswers; j++){	
-			prueQuestions[i][1][j] = new Array();
-			prueQuestions[i][1][j][0] = j;
-			prueQuestions[i][1][j][1] = aQuestions[rndQuest].answers[j].aText;
-			var questToF = aQuestions[rndQuest].answers[j].trueOrFalse;
-			if(questToF){
-				prueQuestions[i][1][j][2] = true;
-			} else{
-				prueQuestions[i][1][j][2] = false;
-			}
-				prueQuestions[i][1][j][4] = false;
-		}
-	});  */
-	
-	/*try {
-		const aQuestions = await doAjax(cValue, sValue);
-		console.log(aQuestions);
-		
-		var questLength = aQuestions.length;
-		var rndQuest =  Math.floor(Math.random() * questLength);
-		console.log(aQuestions); 
-		console.log(rndQuest);
-    
-		questions[i] = new Array();
-		questions[i][0] = aQuestions[rndQuest].question;
-		questions[i][1] = new Array();
-
-		var countAnswers = aQuestions[rndQuest].answers.length;
-
-		for (var j = 0; j < countAnswers; j++){	
-			questions[i][1][j] = new Array();
-			questions[i][1][j][0] = j;
-			questions[i][1][j][1] = aQuestions[rndQuest].answers[j].aText;
-			var questToF = aQuestions[rndQuest].answers[j].trueOrFalse;
-			if(questToF){
-				questions[i][1][j][2] = true;
-			} else{
-				questions[i][1][j][2] = false;
-			}
-				questions[i][1][j][4] = false;
-		}
-		console.log(questions);
-		
-	} catch(err) {
-		console.log(err);
-	}	
-    //choose rnd question
-	//load Questions
-
-  } */
-  //console.log("prueQuestions");
-  //console.log(prueQuestions); 
-  
 }
-console.log("Hallo");
+console.log(questions);
 callback(questions);
 }
 
 function fillQuestions(aQuestions, i) {
 	if (aQuestions.length == 0) {
 		console.log("aQue is null"); 
+		alert("Fragen ist null"); 
 	} else {
 	console.log("fillQuestions"); 
 	console.log(aQuestions);
@@ -187,7 +115,9 @@ function fillQuestions(aQuestions, i) {
 		console.log(aQuestions); 
     
 		prueQuestions[i] = new Array();
+		//question text 
 		prueQuestions[i][0] = aQuestions[rndQuest].question;
+		//array to save answers
 		prueQuestions[i][1] = new Array();
 
 		var countAnswers = aQuestions[rndQuest].answers.length;
@@ -195,8 +125,10 @@ function fillQuestions(aQuestions, i) {
 		for (var j = 0; j < countAnswers; j++){	
 			prueQuestions[i][1][j] = new Array();
 			prueQuestions[i][1][j][0] = j;
+			//saves answers
 			prueQuestions[i][1][j][1] = aQuestions[rndQuest].answers[j].aText;
 			var questToF = aQuestions[rndQuest].answers[j].trueOrFalse;
+			//checks wether answer is wrong or false
 			if(questToF){
 				prueQuestions[i][1][j][2] = true;
 			} else{

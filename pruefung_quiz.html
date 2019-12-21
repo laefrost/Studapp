@@ -19,7 +19,7 @@
   
  </head>
  <body>
- <div class="py-20">
+ <div class="flex py-20">
       <div class="container mx-auto px-6">
        <h2 class="text-4xl font-bold mb-2 text-white">
           Prüfung
@@ -101,9 +101,9 @@ function init(questions, maxQuestion){
   var time_in_minutes = 10;
   start_countdown('div_clock' ,time_in_minutes);
   var currentQuestion = 1;
-  buttonClick('div_questionCount', currentQuestion, maxQuestion, questions);
+  //buttonClick('div_questionCount', currentQuestion, maxQuestion, questions);
   console.log(questions); 
-  fillAnswers('div_answer', questions[0][1].length, questions, 0);
+  fillAnswers('div_answer', questions, 0, maxQuestion);
 }
 
 /*function checkSaveArray(jsonFile, questions){

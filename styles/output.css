@@ -12,17 +12,11 @@ ul.lernen {
 }
 
 #box_prue{
-	width: 90%
-	position: absolute; 
-  margin:  10px;
-  padding: 10px;
+	width: 90%; 
 }
 
 #box_lernen{
-	width: 90%
-	position: absolute; 
-  margin:  10px;
-  padding: 10px;
+	width: 90%; 
 }
 
 .btn_weiter{
@@ -71,7 +65,28 @@ ul.lernen {
 }
 
 .py-20{
-	background: linear-gradient(90deg, #339966 0%, #8cd9b3 100%)
+	background: linear-gradient(90deg, #339966 0%, #8cd9b3 100%);
+}
+
+.answer[selected = "not_selected"]:hover{
+  background-color: #66ccff
+  ; 
+}
+
+.answer[selected = "selected"] {
+  background-color: #669999; 
+}
+
+.answer[selected = "not_selected"] {
+  background-color: #fff; 
+}
+
+.answer[selected = "wrongly_selected"] {
+  background-color: #ff00ff; 
+}
+
+.answer[selected = "correctly_selected"] {
+  background-color: #003399; 
 }
 /* Document
    ========================================================================== */

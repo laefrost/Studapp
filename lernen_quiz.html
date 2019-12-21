@@ -19,7 +19,7 @@
   
  </head>
  <body>
- <div class="py-20">
+ <div class="flex py-20">
       <div class="container mx-auto px-6">
         <h2 class="text-4xl font-bold mb-2 text-white" id="h2_lernen">
           Lernen
@@ -66,7 +66,8 @@
 				},
 				dataType: 'json',
 				success: function (data) {
-					//let questions = JSON.stringify(data); 
+					//let questions = JSON.stringify(data);
+					console.log("Questions lernen_quiz: ") 
 					console.log(data); 
 					if(data == undefined || data == null || data.length == 0) {
 					//alert('Zu dieser Kategorie gibt es keine Fragen!'); 
@@ -85,12 +86,13 @@
 
 	function generateArray(data){
 		var questions; 
-		parseLearningQuestions(data, function(response) {
+		/*parseLearningQuestions(data, function(response) {
 			questions = response;
 			//checkSaveArray(jsonFile, questions);+
 			console.log(questions);
 			init(questions); 
-		});
+		}); */
+		init(data); 
 	} 
 
 /*function checkSaveArray(jsonFile, questions){

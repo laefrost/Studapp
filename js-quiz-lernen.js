@@ -2,14 +2,130 @@ var saveArrayTemp;
 
 function startQuestion(answerDiv, questions, saveArray){
 	var questionNumber = 0;
-	saveArrayTemp = saveArray;
-	replace_question_text(questions[questionNumber][0]);
-	console.log(questions[questionNumber][0]);
+	//saveArrayTemp = saveArray;
+	replace_question_text(questions[questionNumber].question);
+	//console.log(questions[questionNumber][0]);
 	question_number('questionCount', questionNumber, questions.length);
+
 	fillAnswers(answerDiv, questions, questionNumber);
 }
 
-function fillAnswers(answerDiv, questions, questionNumber, saveArray){
+function fillAnswers(answerDiv, questions, questionNumber){ 
+	var answer = null;
+	for(var i = 0; i < questions[questionNumber].answers.length; i++){
+		answer = answer + '<div class="w-full mb-4 bg-gray-500 answer" selected="not_selected">'+
+	    				'<p id="u2499-2">' + questions[questionNumber].answers[i].aText + '</p>' +
+						'</div>';
+		console.log(questions[questionNumber].answers[i]); 
+	}
+	document.getElementById(answerDiv).innerHTML = answer;
+	var aButtons = document.getElementsByClassName("answer"); 
+
+   	for (var j = 0; j < aButtons.length; j++) {
+			aButtons[j].onclick =  setColor;
+	}
+	   
+
+	/*$(".answer").each(function() { 
+		$(this).click(function() {
+			console.log($(this)); 
+			if($(this).attr('selected') === 'not_selected'){
+				console.log("aender not selected"); 
+				$(this).attr('selected', 'selected'); 
+			} else if ($(this).attr('selected') === 'selected')  {
+				$(this).attr('selected', 'not_selected'); 
+				console.log("aender  selected");
+			}
+		})
+	}) */
+
+	var button_test = document.getElementById('btn_weiter'); 
+	var btn_Abgeben = document.getElementById('nextButtonText'); 
+	console.log(button_test)
+	button_test.onclick = function () {
+		//alert(button_test.innerHTML); 
+		if (btn_Abgeben.innerHTML == "Abgeben") {
+			console.log("Abgeben clicked"); 
+
+		for (var i = 0; i < aButtons.length; i++) {
+			if (aButtons[i].getAttribute("selected") == 'selected' && questions[questionNumber].answers[i].trueOrFalse == true || aButtons[i].getAttribute("selected") == 'not_selected' && questions[questionNumber].answers[i].trueOrFalse == false) {
+				aButtons[i].setAttribute("selected", "correctly_selected");
+				console.log(i + aButtons[i].getAttribute("selected"));  
+			}
+			else if (aButtons[i].getAttribute("selected") == 'selected' && questions[questionNumber].answers[i].trueOrFalse == false || aButtons[i].getAttribute("selected") == 'not_selected' && questions[questionNumber].answers[i].trueOrFalse == true) {
+				aButtons[i].setAttribute("selected", "wrongly_selected");
+				console.log(i + aButtons[i].getAttribute("selected")); 
+			}
+		}
+			btn_Abgeben.innerHTML = "Weiter"; 
+		} else if (btn_Abgeben.innerHTML == 'Weiter'){
+			questionNumber++;
+			if(questionNumber == questions.length){
+				window.location.href = './index.html';
+			}else{
+				question_number('questionCount', questionNumber, questions.length);
+				loadNextQuestion(questions, questionNumber);
+			}
+		}
+	} 
+	/*button_test.addEventListener("click", function() {
+	console.log('buttonAbgabeClick');
+
+	var button = document.getElementById('btn_weiter'); 
+	var i = 0; 
+
+		$(".answer").each(function() {
+			console.log("answer " + i ); 
+			if($(this).attr('selected') === 'not_selected') {
+				console.log(questions[questionNumber].answers[i].trueOrFalse); 
+			} else if ($(this).attr('selected') === 'selected') {
+					$(this).attr('selected', 'wrongly_selected');
+					console.log("case1");
+					console.log(questions[questionNumber].answers[i].trueOrFalse);  
+
+			}
+			i++; 
+		})
+	}); */
+
+}
+
+function setColor() {
+	alert("Onclick"); 
+
+		if (this.getAttribute("selected") === "not_selected") {
+				this.setAttribute("selected", "selected"); 
+		} else if (this.getAttribute("selected") === "selected") {
+				this.setAttribute("selected", "not_selected"); 
+		}
+
+}
+
+/*function buttonAbgabeClick() {
+	var aButtons = document.getElementsByClassName("answer"); 
+
+	for (var i = 0; i < aButtons.length; i++) {
+		if (aButtons[i].getAttribute("selected") == 'selected' && questions[questionNumber])
+	}
+}*/
+
+/*function buttonAbgabeClick(questions, questionNumber) {
+	console.log('buttonAbgabeClick');
+	var button = document.getElementById('btn_weiter'); 
+	var i = 0; 
+
+	if (button.innerHTML ==='Abgeben') {
+		$(".answer").each(function() {
+			if($(this).attr('selected') === 'false' && questions[questionNumber].answers[i].trueOrFalse === false) {
+				$(this).atrr('selected', 'correctly_selected');
+			} else if ($(this).attr('selected') === 'true' && questions[questionNumber].answers[i].trueOrFalse === false) {
+					$(this).atrr('selected', 'wrongly_selected');
+			}
+		})
+	}
+} */
+
+/*function fillAnswers(answerDiv, questions, questionNumber, saveArray){
 	var answer = null;
 	for(var i = 0; i < questions[questionNumber][1].length; i++){
 		answer = answer + '<div class="w-full mb-4 bg-gray-500 answer">'+
@@ -50,7 +166,7 @@ function fillAnswers(answerDiv, questions, questionNumber, saveArray){
    	}
    	transformButtonsSelected(questions, questionNumber);
    	buttonAbgabeClick(questionNumber, questions);
-}
+} */
 
 function transformButtonsSelected(questions, questionNumber){
 	//transform buttons if selected or not
@@ -68,6 +184,7 @@ function transformButtonsSelected(questions, questionNumber){
 function replace_question_text(qString){
 	//replace the text of the question
 	var test = document.getElementById('p_question'); 
+	console.log(qString); 
 	if ( test !== null) {
 		test.innerHTML = qString; 
 	} else {
@@ -81,7 +198,7 @@ function question_number(questionId, questionNumber, maxQuestion){
 	//question.innerHTML = 'Frage ' + questionNumber + '/' + maxQuestion;
 }
 
-function buttonAbgabeClick(questionNumber, questions){
+/*function buttonAbgabeClick(questionNumber, questions){
 	//define button next
 	var nextButton = document.getElementById('btn_weiter');
 	var nextButtontext = document.getElementById('nextButtonText');
@@ -117,7 +234,7 @@ function buttonAbgabeClick(questionNumber, questions){
     		}
 		}
 	}
-}
+}*/
 
 function tranformAnswers(questions, questionNumber, answerID, rf){
 	//mark right answers green and wrong red
@@ -129,6 +246,7 @@ function tranformAnswers(questions, questionNumber, answerID, rf){
 }
 
 function loadNextQuestion(questions, questionNumber){
-	replace_question_text(questions[questionNumber][0]);
+	console.log("Fraaaaaaagen" + questions[questionNumber].question); 
+	replace_question_text(questions[questionNumber].question);
 	fillAnswers('div_answer', questions, questionNumber);
 }

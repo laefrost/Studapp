@@ -8,7 +8,7 @@
 	 <script src="lernen.js"></script>
 </head>
 <body>
-<div class="py-20">
+<div class="flex col py-20">
       <div class="container mx-auto px-6">
         <h2 class="text-4xl font-bold mb-2 text-white">
           Katgeorien
@@ -17,7 +17,7 @@
       </div>
     </div>
 	
-	<section class="container mx-auto px-6 p-10">
+	<section class="container mx-auto px-6 md:px-100 p-10">
 	<!--<form>
 		<div id="div_list">
 			<select name="lernen" id="select_lernen">
@@ -38,7 +38,7 @@
   url: 'https://projektseminarlfrb.herokuapp.com/categorys',
   dataType: 'json',
   success: function (data) {
-    var names = data
+	var names = data; 
     console.log(data)
 	loadData(data);
 	
@@ -48,9 +48,10 @@
 		//startRegulär Button class = buttonStartRClass; 
 		var buttonClass = "btn_weiter";
 		getAllMenuItems(menuItemName,catItemName, buttonClass);
-  } 
-}) 
-});
+		
+}
+
+})});
 
 		function loadData(data) {
 			let json = JSON.parse(JSON.stringify(data)); 

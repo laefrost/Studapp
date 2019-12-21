@@ -1,3 +1,5 @@
+
+
 function getAllMenuItems(menuItemName, catItemName, buttonClassR){
   var menuItems = elements = document.getElementsByClassName(menuItemName);
   var catItem = document.getElementsByClassName(catItemName);  
