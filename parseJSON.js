@@ -47,7 +47,7 @@ function loadJSON(callback) {
  }*/
 async function parseTestQuestions(jsonFile, maxQuestions, callback){
 
-var questions = new Array();
+var questions = []; 
 var json; 
 
 console.log("JsonFile : " + jsonFile); 
@@ -55,12 +55,13 @@ console.log("JsonFile : " + jsonFile);
   check: for (var i = 0; i < maxQuestions; i++) {
   	//choose rnd Category
     var rndCat = Math.floor(Math.random() * jsonFile.length);
-    console.log(jsonFile[rndCat].sub_categories.length);
+    //console.log(jsonFile[rndCat].sub_categories.length);
     //choose rnd subCat
     var subCatLength = jsonFile[rndCat].sub_categories.length;
     var rndSubCat = Math.floor(Math.random() * subCatLength);
 	var cValue = jsonFile[rndCat].category_name; 
 	var sValue = jsonFile[rndCat].sub_categories[rndSubCat].subcategory_name; 
+	
 	
 	json = await doAjax(cValue, sValue,i); 
 	
@@ -71,8 +72,15 @@ console.log("JsonFile : " + jsonFile);
 	
 	var questLength = json.length;
 		var rndQuest =  Math.floor(Math.random() * questLength);
-		console.log(json); 
-		console.log(rndQuest);
+		//console.log(json); 
+		//console.log(rndQuest);
+		/*var question = json[rndQuest]; 
+
+		questions.push({
+			q:question,
+			category_name:cValue, 
+			subcategory_name:sValue
+		})*/
 
 		questions[i] = json[rndQuest]; 
     
@@ -96,7 +104,7 @@ console.log("JsonFile : " + jsonFile);
 		}*/
 	}
 }
-console.log(questions);
+//console.log(questions);
 callback(questions);
 }
 

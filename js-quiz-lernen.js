@@ -11,15 +11,19 @@ function startQuestion(answerDiv, questions, saveArray){
 }
 
 function fillAnswers(answerDiv, questions, questionNumber){ 
+	var savedString = localStorage.getItem("saveArrayLernen");
+	var saveArray = JSON.parse(savedString); 
+	var temp = 0;  
 	var answer = null;
 	for(var i = 0; i < questions[questionNumber].answers.length; i++){
 		answer = answer + '<div class="w-full mb-4 bg-gray-500 answer" selected="not_selected">'+
-	    				'<p id="u2499-2">' + questions[questionNumber].answers[i].aText + '</p>' +
+						'<p id="u2499-2">' + questions[questionNumber].answers[i].aText + '<image class = "aImg"/> </p>' +
 						'</div>';
 		console.log(questions[questionNumber].answers[i]); 
 	}
 	document.getElementById(answerDiv).innerHTML = answer;
 	var aButtons = document.getElementsByClassName("answer"); 
+	var aImg = document.getElementsByClassName("aImg"); 
 
    	for (var j = 0; j < aButtons.length; j++) {
 			aButtons[j].onclick =  setColor;
@@ -41,27 +45,47 @@ function fillAnswers(answerDiv, questions, questionNumber){
 
 	var button_test = document.getElementById('btn_weiter'); 
 	var btn_Abgeben = document.getElementById('nextButtonText'); 
+	btn_Abgeben.innerHTML = "Abgeben"; 
+
+
 	console.log(button_test)
 	button_test.onclick = function () {
 		//alert(button_test.innerHTML); 
 		if (btn_Abgeben.innerHTML == "Abgeben") {
-			console.log("Abgeben clicked"); 
+			console.log("Save Array "+ saveArray);  
 
 		for (var i = 0; i < aButtons.length; i++) {
 			if (aButtons[i].getAttribute("selected") == 'selected' && questions[questionNumber].answers[i].trueOrFalse == true || aButtons[i].getAttribute("selected") == 'not_selected' && questions[questionNumber].answers[i].trueOrFalse == false) {
-				aButtons[i].setAttribute("selected", "correctly_selected");
-				console.log(i + aButtons[i].getAttribute("selected"));  
+				//aButtons[i].setAttribute("selected", "correctly_selected");
+				aImg[i].setAttribute("src", "./images/Green-Tick-Transparent-Background.png"); 
+				aImg[i].setAttribute("visibilty", "visible")
+				saveArray[0] = saveArray[0] +1; 
+				console.log("save Array nach richtiger Antwort" + saveArray); 
+
+			
+			} else if (aButtons[i].getAttribute("selected") == 'selected' && questions[questionNumber].answers[i].trueOrFalse == false || aButtons[i].getAttribute("selected") == 'not_selected' && questions[questionNumber].answers[i].trueOrFalse == true) {
+				//aButtons[i].setAttribute("selected", "wrongly_selected");
+				saveArray[1] = saveArray[1] +1; 
+				console.log("save Array nach richtiger Antwort" + saveArray); 
 			}
-			else if (aButtons[i].getAttribute("selected") == 'selected' && questions[questionNumber].answers[i].trueOrFalse == false || aButtons[i].getAttribute("selected") == 'not_selected' && questions[questionNumber].answers[i].trueOrFalse == true) {
-				aButtons[i].setAttribute("selected", "wrongly_selected");
-				console.log(i + aButtons[i].getAttribute("selected")); 
+		}
+
+		for (var i = 0; i < aButtons.length; i++) {
+			if (questions[questionNumber].answers[i].trueOrFalse == true) {
+				aButtons[i].setAttribute("selected", "correct");
 			}
+			else if (questions[questionNumber].answers[i].trueOrFalse == false) {
+				aButtons[i].setAttribute("selected", "wrong");
+			}
+
 		}
 			btn_Abgeben.innerHTML = "Weiter"; 
 		} else if (btn_Abgeben.innerHTML == 'Weiter'){
 			questionNumber++;
 			if(questionNumber == questions.length){
-				window.location.href = './index.html';
+				console.log("saveArray weiter " + saveArray)
+				localStorage.setItem("saveArrayLernen", JSON.stringify(saveArray)); 
+				window.location.href = './studentPerformanceLernen.html';
 			}else{
 				question_number('questionCount', questionNumber, questions.length);
 				loadNextQuestion(questions, questionNumber);

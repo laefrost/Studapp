@@ -40,36 +40,6 @@ function question_number(questionId, currentQuestion, maxQuestion){
 	question.innerHTML = 'Frage ' + nmb + '/' + maxQuestion;
 } 
 
-/*function buttonClick(questionId, currentQuestion, maxQuestion, questions){
-	//define next button
-	question_number(questionId, currentQuestion, maxQuestion)
-	var nextButton = document.getElementById('btn_prue');
-	var nextButtontext = document.getElementById('nextButtonText');
-	nextButton.style.cursor = 'pointer';
-	nextButton.onclick = function() {
-    	currentQuestion++;
-    	var finish = checkButton(nextButtonText, backButton, currentQuestion, maxQuestion)
-    	if(finish){
-    		localStorage.setItem("Quiz", JSON.stringify(questions));
-    		window.location.href = '/ergebnis.php';
-    	}else{
-    		question_number('div_questionCount', currentQuestion, maxQuestion);
-    		loadNextQuestion(questions, currentQuestion);
-    	}
-
-	};
-	//define back button
-	var backButton = document.getElementById('btn_back');
-	backButton.style.cursor = 'pointer';
-	backButton.onclick = function() {
-    	currentQuestion--;
-    	question_number('questionCount', currentQuestion, maxQuestion);
-    	checkButton(nextButtonText, backButton, currentQuestion, maxQuestion)
-    	loadNextQuestion(questions, currentQuestion);
-	};
-	checkButton(nextButtonText, backButton, currentQuestion, maxQuestion);
-} */
-
 function checkButton(nextButtonText, backButton, currentQuestion, maxQuestion){
 	//Button Text
 	if(currentQuestion == 0){
@@ -92,8 +62,6 @@ function checkButton(nextButtonText, backButton, currentQuestion, maxQuestion){
 function fillAnswers(divID, questions, questionNumber, maxQuestion){
 	console.log("fillAnswers"); 
 	question_number('div_questionCount', questionNumber, maxQuestion);
-	console.log("questionNumber : " + questionNumber); 
-	//console.log("currentQuestion " + currentQuestion); 
 	var answer;
 	replace_question_text(questions[questionNumber].question);
 	//fill answers divs with html code
@@ -109,77 +77,110 @@ function fillAnswers(divID, questions, questionNumber, maxQuestion){
 	var aButtons = document.getElementsByClassName("answer");
 	   
    	for (var j = 0; j < aButtons.length; j++) {
-	aButtons[j].onclick =  setColor;
+		aButtons[j].onclick =  setColor;
 	}
 
 	var btnBack = document.getElementById("btn_back"); 
 	var btnForth = document.getElementById("btn_prue"); 
 
 	btnForth.onclick = function() {
+		checkAnswers(questions[questionNumber], "answer"); 
 		questionNumber++;
 		var finish = checkButton(btnForth, btnBack, questionNumber, maxQuestion); 
     	if(finish){
-    		//localStorage.setItem("Quiz", JSON.stringify(questions));
-    		window.location.href = '/ergebnis.php';
-    	}else{
+    		window.location.href = '/studentPerformance.html';
+    	} else{
     		loadNextQuestion(questions, questionNumber, maxQuestion);
     	}
 	}
 
-	btnBack.onclick = function() {
-		alert("btnBack clicked"); 
+	btnBack.onclick = function() { 
 		questionNumber--;
-    	//question_number('questionCount', questionNumber, maxQuestion);
     	checkButton(btnForth, btnBack, questionNumber, maxQuestion)
     	loadNextQuestion(questions, questionNumber, maxQuestion);
 	}
+}
 
-	
+function checkAnswers(question, htmlEl, category_name, subcategory_name) {
+	var aButtons = document.getElementsByClassName(htmlEl); 
+	var statArray = localStorage.getItem("statArray"); 
+	var ansArray = localStorage.getItem("saveArrayPruefung"); 
+	var stats = JSON.parse(statArray); 
+	var ans = JSON.parse(ansArray); 
+	console.log("answers " + ans); 
 
-
-
-/*   	for (var i = 0; i < aButtons.length; i++) {
-
-   		questions[questionNumber][1][i][3] = aButtons[i];
-   		questions[questionNumber][1][i][3].style.cursor = 'pointer';
-		questions[questionNumber][1][i][3].onclick = function() {
-			for (var i = 0; i < questions[questionNumber][1].length; i++) {
-				if(this == questions[questionNumber][1][i][3]){
-					if(questions[questionNumber][1][i][4] == false){
-						questions[questionNumber][1][i][4] = true;
-					}else{
-						questions[questionNumber][1][i][4] = false;
-					}
-					transformButtonsSelected(questions, questionNumber);
-				}
-			}
+	index = stats.findIndex(x => x.category_name ===question.category_name && x.subcategory_name === question.subcategory_name)
+	//console.log(index); 
+	if (index != -1) {
+	for (var i = 0; i < aButtons.length; i++) {
+		if (aButtons[i].getAttribute("selected") == 'selected' && question.answers[i].trueOrFalse == true || aButtons[i].getAttribute("selected") == 'not_selected' && question.answers[i].trueOrFalse == false) {
+			//aButtons[i].setAttribute("selected", "correctly_selected");
+			//console.log(stats[index]); 
+			var temp = stats[index].aCorr; 
+			//console.log("value aCorr before " + temp); 
+			stats[index].aCorr = Number(temp) + Number(1); 
+			//console.log("value aCorr after " + stats[index].aCorr); 
+			ans[0] = ans[0]+1; 
+		
+		} else if (aButtons[i].getAttribute("selected") == 'selected' && question.answers[i].trueOrFalse == false || aButtons[i].getAttribute("selected") == 'not_selected' && question.answers[i].trueOrFalse == true) {
+			//aButtons[i].setAttribute("selected", "wrongly_selected"); 
+			var temp = stats[index].aFalse; 
+			//console.log("value aFalse before " + temp); 
+			stats[index].aFalse = Number(temp) + Number(1); 
+			//console.log("value aFalse after " + stats[index].aFalse); 
+			ans[1] = ans[1] +1; 
 		}
-   	}
+	}
+	localStorage.setItem("statArray", JSON.stringify(stats)); 
+	localStorage.setItem("saveArrayPruefung", JSON.stringify(ans)); 
+} else {
+	for (var i = 0; i < aButtons.length; i++) {
+		if (aButtons[i].getAttribute("selected") == 'selected' && question.answers[i].trueOrFalse == true || aButtons[i].getAttribute("selected") == 'not_selected' && question.answers[i].trueOrFalse == false) {
+			ans[0] = ans[0]+1; 
+		
+		} else if (aButtons[i].getAttribute("selected") == 'selected' && question.answers[i].trueOrFalse == false || aButtons[i].getAttribute("selected") == 'not_selected' && question.answers[i].trueOrFalse == true) {
+			ans[1] = ans[1] +1; 
+		}
+	}
+	localStorage.setItem("saveArrayPruefung", JSON.stringify(ans)); 
+}
 
-   	transformButtonsSelected(questions, questionNumber); */
 }
 
 function setColor() {
-	alert("Onclick"); 
-
-		if (this.getAttribute("selected") === "not_selected") {
-				this.setAttribute("selected", "selected"); 
-		} else if (this.getAttribute("selected") === "selected") {
-				this.setAttribute("selected", "not_selected"); 
-		}
-}
-
-function transformButtonsSelected(questions, questionNumber){
-	//transform selected buttons
-	for (var i = 0; i < questions[questionNumber][1].length; i++) {
-		if (questions[questionNumber][1][i][4] == true){
-			questions[questionNumber][1][i][3].style.background = "#fff";
-		}else if(questions[questionNumber][1][i][4] == false){
-			questions[questionNumber][1][i][3].style.background = "#A2A2A2";
-		}
+	if (this.getAttribute("selected") === "not_selected") {
+		this.setAttribute("selected", "selected"); 
+	} else if (this.getAttribute("selected") === "selected") {
+		this.setAttribute("selected", "not_selected"); 
 	}
 }
 
 function loadNextQuestion(questions, questionNumber, maxQuestion){
 	fillAnswers('div_answer', questions, questionNumber, maxQuestion);
+}
+
+async function createStatArray() {
+	var statArray = await getStat();  
+	localStorage.setItem("statArray", JSON.stringify(statArray)); 
+}
+
+async function getStat() {
+	const result = await $.ajax({
+		type: 'GET',
+		url: 'https://projektseminarlfrb.herokuapp.com/stats',
+		dataType: 'json',
+		success: function (data) {
+			console.log(JSON.stringify(data)); 
+			return data; 
+		},
+		error: function (result){ 
+			return null; 
+		}
+	});
+	return result; 
+}
+
+function createArrayPruefung() {
+	var arr = [0,0]; 
+	localStorage.setItem("saveArrayPruefung", JSON.stringify(arr)); 
 }

@@ -68,6 +68,12 @@ ul.lernen {
 	background: linear-gradient(90deg, #339966 0%, #8cd9b3 100%);
 }
 
+.answer{
+  width: 100%;
+  height: 100%;
+  vertical-align: 'middle'; 
+}
+
 .answer[selected = "not_selected"]:hover{
   background-color: #66ccff
   ; 
@@ -81,12 +87,19 @@ ul.lernen {
   background-color: #fff; 
 }
 
-.answer[selected = "wrongly_selected"] {
-  background-color: #ff00ff; 
+.answer[selected = "correct"] {
+   background-color: #416224;
 }
 
-.answer[selected = "correctly_selected"] {
-  background-color: #003399; 
+.answer[selected = "wrong"] {
+   background-color: #800000;
+} 
+
+.aImg {
+  float: "right";
+  max-width: 50px;
+  max-height: 50px;
+  visibility: "hidden";
 }
 /* Document
    ========================================================================== */
