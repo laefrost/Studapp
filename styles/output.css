@@ -101,6 +101,11 @@ ul.lernen {
   max-height: 50px;
   visibility: "hidden";
 }
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
 /* Document
    ========================================================================== */
 

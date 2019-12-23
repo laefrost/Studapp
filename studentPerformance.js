@@ -2,21 +2,46 @@ function createUserPie() {
     var saveArray = localStorage.getItem("saveArrayPruefung");
     console.log(JSON.parse(saveArray))
     
-    var chart = new Chartist.Pie('#chart_Student', {
-        labels: ['right', 'wrong'],
-        series: JSON.parse(saveArray)
-      }, {
-        donut: true,
-        donutWidth: 42,
-        showLabel: true
-      });
+    new Chart(document.getElementById("chart_Student"), {
+        type: 'pie',
+        data: {
+          labels: ["right", "wrong"],
+          datasets: [{
+            label: "Antworten richtig/falsch",
+            backgroundColor: ["#3e95cd", "#8e5ea2"],
+            data: JSON.parse(saveArray)
+          }]
+        },
+        options: {
+          title: {
+            display: true,
+            text: 'Deine Performance'
+          }
+        }
+    });
         
 
 }
 
 async function createAvPie() {
     var avData = await loadAvPie(); 
-    console.log(avData); 
+    new Chart(document.getElementById("chart_Av"), {
+      type: 'pie',
+      data: {
+        labels: ["right", "wrong"],
+        datasets: [{
+          label: "Antworten richtig/falsch",
+          backgroundColor: ["#3e95cd", "#8e5ea2"],
+          data: avData
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Durchschnittsperformance'
+        }
+      }
+  }); 
 }
 
 async function loadAvPie() {
@@ -45,3 +70,49 @@ async function loadAvPie() {
     return json; 
 
 }
+
+function updateSeverData() {
+    var saveArray = localStorage.getItem("statArray");
+    var arr = JSON.parse(saveArray); 
+    console.log(arr.length)
+
+    for (var i = 0; i < arr.length; i++) {
+        console.log((arr[i]).aCorr);
+        var id = (arr[i])._id; 
+        var data = {
+            'aCorr':arr[i].aCorr,
+            'aFalse':arr[i].aFalse
+        }
+        console.log(data); 
+
+        $.ajax({
+            type: 'PATCH',
+            url: 'https://projektseminarlfrb.herokuapp.com/stats' +'/' + id,
+            dataType: 'json',
+            data : JSON.stringify(data),
+            contentType: 'application/json',
+            success: function (result) {
+                console.log("test" + JSON.stringify(result)); 
+            return data; 
+            },
+            error: function (result){ 
+                console.log("error" + result); 
+                return null; 
+            }
+    })
+}
+}
+
+   /* $.ajax({
+        type: 'PATCH',
+        url: 'https://projektseminarlfrb.herokuapp.com/stats',
+        dataType: 'json',
+        success: function (data) {
+            console.log(data); 
+        return data; 
+        },
+        error: function (result){ 
+            console.log("error" + error); 
+            return null; 
+        }
+    }); */

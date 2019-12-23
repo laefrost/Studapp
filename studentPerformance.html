@@ -59,18 +59,18 @@
 	</header>
 	<div class="flex mb-4">
 		<div class="flex-1 w-1/2 h-12">
-			<div class="ct-chart ct-perfect-fourth" id="chart_Student">Deine Performance</div>
+			<canvas id="chart_Student">Deine Performance</canvas>
 		</div>
 		<div class="flex-1 w-1/2 h-12">
-			<div class="ct-chart ct-perfect-fourth" id="chart_Av">Durchschnitts Performance</div>
+			<canvas id="chart_Av">Durchschnitts-Performance</canvas>
 		</div>
 	  </div>
-
-	<script src="bower_components/chartist/dist/chartist.min.js"></script>
+	  <script src="node_modules/chart.js/dist/Chart.js"></script>
 	<script>
 		$(document).ready(function() {
 			createUserPie(); 
 			createAvPie(); 
+			updateSeverData(); 
 		})
 	</script>
     </div>
