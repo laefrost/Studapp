@@ -11,6 +11,16 @@
 	<script src="bundle.js"></script> 
 	<script src="js/navigation.js"></script> 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<style>
+        .gradient {
+            background: linear-gradient(90deg, #939492 0%, #6c7597 100%);
+        }
+        
+        #menu-toggle:checked + #menu {
+            display: block;
+        }
+    </style>
+
   
 	<title>Quiz-Lernen</title>
   
@@ -56,28 +66,30 @@
 		</div>
 	
 	</header>
- <div class="flex py-20">
-      <div class="container mx-auto px-6">
-       <h2 class="text-4xl font-bold mb-2 text-white">
+ <div class="flex flex-wrap py-20">
+      <div class="container mx-auto">
+       <h2 class="text-2xl font-bold mb-2 text-black">
           Prüfung
         </h2>
-		<h3 class="text-2xl mb-8 text-gray-200" id = "h3_time">
+		<h3 class="text-1xl mb-8 text-black" id = "h3_time">
 			<div id="div_clock"> </div>
         </h3>
-		<h4 class="text-2xl mb-8 text-gray-200" id = "h4_numb_questions">
+		<h4 class="text-1xl mb-8 text-black" id = "h4_numb_questions">
 			<div id="div_questionCount"> </div>
 		</h4>
-	  </div>
-    </div>
-	<section class="container mx-auto px-6 p-10">
+	</div>
+	
+	<section class="flex-col container pt-4 mx-auto mt-2 rounded shadow-md bg-gray-300 rounded px-8 pt-6 pb-4 mb-4">
 		<div id = "box_pru">
 		<div class="flex flex-wrap">
 			<div class="w-full" id = "div_question">
-				<p id="p_question"></p>
+				<p class="font-bold" id="p_question"></p>
 			</div>
 		</div>
 		<div class="flex flex-wrap" id="div_answer">
 		</div>
+		<!--<div id = "divLodaingGif" style="width:100%;height:0;padding-bottom:100%;position:relative;"><iframe src="https://giphy.com/embed/DQTCVWxe4X1cI" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/loop-trump-loading-DQTCVWxe4X1cI">via GIPHY</a></p>
+</div>-->
 		<div>
 		<button class="btn_weiter text-white font-bold py-2 px-4 rounded-full" id="btn_prue">
 		   <p id="nextButtonText">Weiter</p>
@@ -88,76 +100,14 @@
 		   <p id="backBtnText">Zurück</p>
         </button>
 		</div>
+		</section>
+		</div>
        
     </section>
 	<script type="text/javascript">
 		$(document).ready(function(){
-	
-			$.ajax({
-				type: 'GET',
-				url: 'https://projektseminarlfrb.herokuapp.com/categorys',
-				dataType: 'json',
-				success: function (data) {
-					//let questions = JSON.stringify(data); 
-					//console.log(data); 
-					if(data == undefined || data == null || data.length == 0) {
-						alert('Fehler beim Laden'); 
-						window.location.href = './index.html'; 
-					} else {
-						createStatArray(data);
-						createArrayPruefung();
-						generateArray(data);
-						//console.log(result);
-					}
-				},
-				error: function (result){ 
-					console.log(result);
-					alert("Es gab einen Fehler beim Laden der Daten!"); 
-	
-			}}); 
+		loadData(); 
 		})
-	
-
-function generateArray(jsonFile){
-  var maxQuestion = 10;
-  parseTestQuestions(jsonFile, maxQuestion, function(response) {
-    questions = response;
-	console.log("Fraaaaaaaager"); 
-	console.log(questions); 
-    init(questions, maxQuestion);
-  });
-}
-
-
-
-function init(questions, maxQuestion){
-  console.log('init');
-
-  var currentQuestion = 1;
-  //var answers = dummyArray(maxQuestion);
-  //replace_question_text();
-  
-  var time_in_minutes = 10;
-  start_countdown('div_clock' ,time_in_minutes);
-  var currentQuestion = 1;
-  //buttonClick('div_questionCount', currentQuestion, maxQuestion, questions);
-  console.log(questions); 
-  fillAnswers('div_answer', questions, 0, maxQuestion);
-}
-
-/*function checkSaveArray(jsonFile, questions){
-  var saveArray;
-  if (localStorage.getItem('saveArrayQuiz') !== null) {
-    saveArray = JSON.parse(localStorage.getItem("saveArrayQuiz"));
-    init(questions, saveArray);
-  }else{
-    generateSaveArray(jsonFile, function(response) {
-      saveArray = response;
-      init(questions, saveArray);
-    });
-  }
-} */
-
 </script>
   </body>
 </html>

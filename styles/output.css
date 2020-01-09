@@ -21,7 +21,7 @@ ul.lernen {
 
 .btn_weiter{
 	-webkit-appearance: button;
-	background-color: #339966;
+	background-color: #56b988;
 	overflow: visible;
 	font-family: inherit; /* 1 */
 	font-size: 100%; /* 1 */
@@ -30,13 +30,14 @@ ul.lernen {
 	border-radius: 8px;
 	text-transform: none;
 	overflow: visible;
-	cursor: pointer;
+  cursor: pointer;
+  float: right; 
 	
 }
 
 .btn_weiter:hover{
 	background-color: #fff; 
-	color:#339966;
+	color:#56b988;
 	
 }
 
@@ -56,7 +57,8 @@ ul.lernen {
 	border-radius: 8px;
 	text-transform: none;
 	overflow: visible;
-	cursor: pointer;
+  cursor: pointer;
+  float :left; 
 }
 
 .btn_back:hover{
@@ -64,31 +66,31 @@ ul.lernen {
 	color:#800000;
 }
 
-.py-20{
+/*.py-20{
 	background: linear-gradient(90deg, #339966 0%, #8cd9b3 100%);
-}
+}*/
 
 .answer{
   width: 100%;
   height: 100%;
-  vertical-align: 'middle'; 
+  background-color: #e2e8f0;
 }
 
 .answer[selected = "not_selected"]:hover{
-  background-color: #66ccff
+  background-color: #afb6b9
   ; 
 }
 
 .answer[selected = "selected"] {
-  background-color: #669999; 
+  background-color: #727272; 
 }
 
 .answer[selected = "not_selected"] {
-  background-color: #fff; 
+  background-color: #e2e8f0; 
 }
 
 .answer[selected = "correct"] {
-   background-color: #416224;
+   background-color: #56b988;
 }
 
 .answer[selected = "wrong"] {
@@ -96,16 +98,39 @@ ul.lernen {
 } 
 
 .aImg {
-  float: "right";
-  max-width: 50px;
-  max-height: 50px;
-  visibility: "hidden";
+  width: 30px;
+  height: 30px; 
+  margin-right: 10px;
+  display: none;
 }
 
-.container {
-  display: flex;
-  flex-wrap: wrap;
+.p_question{
+  float:left;
 }
+
+.div_Img{
+  float:right; 
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.div_graph{
+  display: block;
+}
+
+.chart-js-monitor{
+  width:100%; 
+  height: 100%; 
+}
+
+/*.subMenu[selected = "false"] {
+  display:none; 
+}
+
+.subMenu[selected = "true"] {
+  display : block; 
+}*/
+
 /* Document
    ========================================================================== */
 

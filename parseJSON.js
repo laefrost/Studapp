@@ -61,7 +61,7 @@ console.log("JsonFile : " + jsonFile);
     var rndSubCat = Math.floor(Math.random() * subCatLength);
 	var cValue = jsonFile[rndCat].category_name; 
 	var sValue = jsonFile[rndCat].sub_categories[rndSubCat].subcategory_name; 
-	
+	questions[i] = new Array(); 
 	
 	json = await doAjax(cValue, sValue,i); 
 	
@@ -82,7 +82,25 @@ console.log("JsonFile : " + jsonFile);
 			subcategory_name:sValue
 		})*/
 
-		questions[i] = json[rndQuest]; 
+		var countAnswers = json[rndQuest].answers.length;
+		questions[i][0] = json[rndQuest].question;
+		questions[i][1] = new Array(); 
+		questions[i][2] = json[rndQuest].category_name;
+		questions[i][3] = json[rndQuest].subcategory_name;  
+
+		for (var j = 0; j < countAnswers; j++){	
+			questions[i][1][j] = new Array();
+			questions[i][1][j][0] = j;
+			questions[i][1][j][1] = json[rndQuest].answers[j].aText;
+			var questToF = json[rndQuest].answers[j].trueOrFalse;
+			if(questToF){
+				questions[i][1][j][2] = true;
+			} else{
+				questions[i][1][j][2] = false;
+			}
+				questions[i][1][j][4] = false;
+		}
+		
     
 		/*questions[i] = new Array();
 		questions[i][0] = json[rndQuest].question;
@@ -104,7 +122,7 @@ console.log("JsonFile : " + jsonFile);
 		}*/
 	}
 }
-//console.log(questions);
+console.log(questions);
 callback(questions);
 }
 
@@ -248,8 +266,9 @@ function parseLearningQuestions(jsonFile, callback){
 	  }
 	  questionNumber++;
   }
-  console.log(questions); 
-  callback(questions); 
+  console.log(questions);
+  callback(questions);  
+}
   /*if(selectedItems !== null){
     for(var i = 0; i < jsonFile.length; i++){
       for(var main = 0; main < jsonFile['categories'].length; main++){
@@ -294,8 +313,6 @@ function parseLearningQuestions(jsonFile, callback){
     questions[rand] =tmp;
   } */
 
-  callback(questions);
-}
 
 function generateSaveArray(jsonFile, callback){
   //generate the array to safe the answers if it does not exist

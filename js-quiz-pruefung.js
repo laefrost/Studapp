@@ -1,186 +1,302 @@
+function loadData() {
+	$.ajax({
+		type: 'GET',
+		url: 'https://projektseminarlfrb.herokuapp.com/categorys',
+		dataType: 'json',
+		success: function (data) {
+			//let questions = JSON.stringify(data); 
+			console.log(data);
+			if (data == undefined || data == null || data.length == 0) {
+				alert('Fehler beim Laden');
+				window.location.href = './index.html';
+			} else {
+				createStatArray();
+				generateArray(data);
+			}
+		},
+		error: function (result) {
+			console.log(result);
+			alert("Es gab einen Fehler beim Laden der Daten!");
 
+		},
+		complete: function () {
+			//$('#divLodaingGif').hide();
 
-function replace_question_text(string){
+		}
+	});
+}
+
+function generateArray(jsonFile) {
+	console.log("generateArray")
+	var maxQuestion = 10;
+	parseTestQuestions(jsonFile, maxQuestion, function (response) {
+		questions = response;
+		init(questions, maxQuestion);
+	});
+}
+
+async function parseTestQuestions(jsonFile, maxQuestions, callback) {
+	console.log("parseTestQuestions")
+	var questions = [];
+	var json;
+
+	console.log("JsonFile : " + jsonFile);
+
+	check: for (var i = 0; i < maxQuestions; i++) {
+		var rndCat = Math.floor(Math.random() * jsonFile.length);
+		var subCatLength = jsonFile[rndCat].sub_categories.length;
+		var rndSubCat = Math.floor(Math.random() * subCatLength);
+		var cValue = jsonFile[rndCat].category_name;
+		var sValue = jsonFile[rndCat].sub_categories[rndSubCat].subcategory_name;
+		questions[i] = new Array();
+
+		json = await doAjax(cValue, sValue, i);
+
+		if (json.length === 0) {
+			i--;
+			continue check;
+		} else {
+
+			var questLength = json.length;
+			var rndQuest = Math.floor(Math.random() * questLength);
+
+			var countAnswers = json[rndQuest].answers.length;
+			questions[i][0] = json[rndQuest].question;
+			questions[i][1] = new Array();
+			questions[i][2] = json[rndQuest].category_name;
+			questions[i][3] = json[rndQuest].subcategory_name;
+
+			for (var j = 0; j < countAnswers; j++) {
+				questions[i][1][j] = new Array();
+				questions[i][1][j][0] = j;
+				questions[i][1][j][1] = json[rndQuest].answers[j].aText;
+				var questToF = json[rndQuest].answers[j].trueOrFalse;
+				if (questToF) {
+					questions[i][1][j][2] = true;
+				} else {
+					questions[i][1][j][2] = false;
+				}
+				questions[i][1][j][4] = false;
+			}
+		}
+	}
+	console.log(questions);
+	callback(questions);
+}
+
+async function doAjax(cValue, sValue, i) {
+	const result = await $.ajax({
+		type: 'GET',
+		url: 'https://projektseminarlfrb.herokuapp.com/questions',
+		data: {
+			"category_name": cValue,
+			"subcategory_name": sValue
+		},
+		dataType: 'json',
+		/*beforeSend: function(){
+		$('#img_load').show();
+		},
+		complete: function(){
+		$('#img_load').hide();
+		},*/
+		success: function (data) {
+			//console.log("ajax done"); 
+			//console.log(data); 
+			/*if (data !== null || data !== undefined || data.length == 0) {
+				fillQuestions(data, i); 
+			} else {
+				doAjax(cValue, sValue, i); 
+			}*/
+			//return data;
+		},
+		error: function (result) {
+			return null;
+		}
+	});
+	return result;
+}
+
+function init(questions, maxQuestion) {
+	console.log('init');
+	var time_in_minutes = 10;
+	start_countdown('div_clock', time_in_minutes);
+	var currentQuestion = 0;
+	console.log(questions);
+	fillAnswers('div_answer', questions, currentQuestion, maxQuestion);
+}
+
+function replace_question_text(string) {
 	document.getElementById('p_question').innerHTML = string;
 }
 
-
-function start_countdown(clockid ,time_in_minutes){
+function start_countdown(clockid, time_in_minutes) {
 	//start the countdown
 	var current_time = Date.parse(new Date());
-	var deadline = new Date(current_time + time_in_minutes*60*1000);
-	run_clock(clockid ,deadline);
+	var deadline = new Date(current_time + time_in_minutes * 60 * 1000);
+	run_clock(clockid, deadline);
 }
 
-function time_remaining(endtime){
+function time_remaining(endtime) {
 	var t = Date.parse(endtime) - Date.parse(new Date());
-	var seconds = Math.floor( (t/1000) % 60 );
-	var minutes = Math.floor( (t/1000/60) % 60 );
-	var hours = Math.floor( (t/(1000*60*60)) % 24 );
-	var days = Math.floor( t/(1000*60*60*24) );
-	return {'total':t, 'days':days, 'hours':hours, 'minutes':minutes, 'seconds':seconds};
+	var seconds = Math.floor((t / 1000) % 60);
+	var minutes = Math.floor((t / 1000 / 60) % 60);
+	var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+	var days = Math.floor(t / (1000 * 60 * 60 * 24));
+	return { 'total': t, 'days': days, 'hours': hours, 'minutes': minutes, 'seconds': seconds };
 }
-function run_clock(id,endtime){
+
+function run_clock(id, endtime) {
 	var clock = document.getElementById(id);
-	function update_clock(){
+	function update_clock() {
 		var t = time_remaining(endtime);
-		clock.innerHTML = t.minutes+':'+t.seconds;
-		if(t.total<=0){ 
+		clock.innerHTML = t.minutes + ':' + t.seconds;
+		if (t.total <= 0) {
 			localStorage.setItem("Quiz", JSON.stringify(questions));
-    		window.location.href = '/ergebnis.php';
+			window.location.href = '/ergebnis.php';
 		}
 	}
 	update_clock(); // run function once at first to avoid delay
-	var timeinterval = setInterval(update_clock,1000);
-} 
+	var timeinterval = setInterval(update_clock, 1000);
+}
 
-function question_number(questionId, currentQuestion, maxQuestion){
+function question_number(questionId, currentQuestion, maxQuestion) {
 	var question = document.getElementById(questionId);
-	var nmb = currentQuestion + 1; 
+	var nmb = currentQuestion + 1;
 	question.innerHTML = 'Frage ' + nmb + '/' + maxQuestion;
-} 
+}
 
-function checkButton(nextButtonText, backButton, currentQuestion, maxQuestion){
+function checkButton(nextButtonText, backButton, currentQuestion, maxQuestion) {
 	//Button Text
-	if(currentQuestion == 0){
+	if (currentQuestion == 0) {
 		backButton.style.display = 'none';
-	}else{
+	} else {
 		backButton.style.display = 'block';
 	}
-	if(currentQuestion == (maxQuestion-1)){
+	if (currentQuestion == (maxQuestion - 1)) {
 		nextButtonText.innerHTML = 'Fertig';
-	}else{
+	} else {
 		nextButtonText.innerHTML = 'Weiter';
 	}
-
-	if(currentQuestion > (maxQuestion-1)){
+	if (currentQuestion > (maxQuestion - 1)) {
 		return true;
 	}
 	return false;
 }
 
-function fillAnswers(divID, questions, questionNumber, maxQuestion){
-	console.log("fillAnswers"); 
+function fillAnswers(divID, questions, questionNumber, maxQuestion) {
+	console.log("fillAnswers");
 	question_number('div_questionCount', questionNumber, maxQuestion);
-	var answer;
-	replace_question_text(questions[questionNumber].question);
-	//fill answers divs with html code
-	for(var i = 0; i < questions[questionNumber].answers.length; i++){
-		//console.log(countAnswers); 
-		answer = answer + '<div class="w-full mb-4 bg-gray-500 answer" selected="not_selected">'+
-    				'<p id="u2009-2">' + questions[questionNumber].answers[i].aText + '</p>' +
-    				'</div>';
+	var answer = null;
+	replace_question_text(questions[questionNumber][0]);
+	for (var i = 0; i < 4; i++) {
+		if (answer === null) {
+			answer = '<div class="w-full mb-4 bg-gray-500 answer" selected="not_selected">' +
+				'<p id="u2009-2">' + questions[questionNumber][1][i][1] + '</p>' +
+				'</div>';
+		} else {
+			answer = answer + '<div class="w-full mb-4 bg-gray-500 answer" selected="not_selected">' +
+				'<p id="u2009-2">' + questions[questionNumber][1][i][1] + '</p>' +
+				'</div>';
+		}
 	}
 
-	//get answers as objects
-   	document.getElementById(divID).innerHTML = answer;
+	document.getElementById(divID).innerHTML = answer;
 	var aButtons = document.getElementsByClassName("answer");
-	   
-   	for (var j = 0; j < aButtons.length; j++) {
-		aButtons[j].onclick =  setColor;
+
+	for (var i = 0; i < aButtons.length; i++) {
+		questions[questionNumber][1][i][3] = aButtons[i];
+		questions[questionNumber][1][i][3].style.cursor = 'pointer';
+		questions[questionNumber][1][i][3].style.background = "#e2e8f0";
+		questions[questionNumber][1][i][3].onclick = function () {
+			for (var i = 0; i < questions[questionNumber][1].length; i++) {
+				if (this == questions[questionNumber][1][i][3]) {
+					if (questions[questionNumber][1][i][4] == false) {
+						questions[questionNumber][1][i][4] = true;
+					} else {
+						questions[questionNumber][1][i][4] = false;
+					}
+					transformButtonsSelected(questions, questionNumber);
+				}
+			}
+		}
 	}
 
-	var btnBack = document.getElementById("btn_back"); 
-	var btnForth = document.getElementById("btn_prue"); 
+	transformButtonsSelected(questions, questionNumber);
+	var btnBack = document.getElementById("btn_back");
+	var btnForth = document.getElementById("btn_prue");
 
-	btnForth.onclick = function() {
-		checkAnswers(questions[questionNumber], "answer"); 
+	btnForth.onclick = function () {
+		checkAnswers(questions, questionNumber, "answer");
 		questionNumber++;
-		var finish = checkButton(btnForth, btnBack, questionNumber, maxQuestion); 
-    	if(finish){
-    		window.location.href = '/studentPerformance.html';
-    	} else{
-    		loadNextQuestion(questions, questionNumber, maxQuestion);
-    	}
+		var finish = checkButton(btnForth, btnBack, questionNumber, maxQuestion);
+		if (finish) {
+			window.location.href = '/studentPerformance.html';
+		} else {
+			loadNextQuestion(questions, questionNumber, maxQuestion);
+		}
 	}
 
-	btnBack.onclick = function() { 
+	btnBack.onclick = function () {
 		questionNumber--;
-    	checkButton(btnForth, btnBack, questionNumber, maxQuestion)
-    	loadNextQuestion(questions, questionNumber, maxQuestion);
+		checkButton(btnForth, btnBack, questionNumber, maxQuestion)
+		loadNextQuestion(questions, questionNumber, maxQuestion);
 	}
 }
 
-function checkAnswers(question, htmlEl, category_name, subcategory_name) {
-	var aButtons = document.getElementsByClassName(htmlEl); 
-	var statArray = localStorage.getItem("statArray"); 
-	var ansArray = localStorage.getItem("saveArrayPruefung"); 
-	var stats = JSON.parse(statArray); 
-	var ans = JSON.parse(ansArray); 
-	console.log("answers " + ans); 
-
-	index = stats.findIndex(x => x.category_name ===question.category_name && x.subcategory_name === question.subcategory_name)
-	//console.log(index); 
-	if (index != -1) {
-	for (var i = 0; i < aButtons.length; i++) {
-		if (aButtons[i].getAttribute("selected") == 'selected' && question.answers[i].trueOrFalse == true || aButtons[i].getAttribute("selected") == 'not_selected' && question.answers[i].trueOrFalse == false) {
-			//aButtons[i].setAttribute("selected", "correctly_selected");
-			//console.log(stats[index]); 
-			var temp = stats[index].aCorr; 
-			//console.log("value aCorr before " + temp); 
-			stats[index].aCorr = Number(temp) + Number(1); 
-			//console.log("value aCorr after " + stats[index].aCorr); 
-			ans[0] = ans[0]+1; 
-		
-		} else if (aButtons[i].getAttribute("selected") == 'selected' && question.answers[i].trueOrFalse == false || aButtons[i].getAttribute("selected") == 'not_selected' && question.answers[i].trueOrFalse == true) {
-			//aButtons[i].setAttribute("selected", "wrongly_selected"); 
-			var temp = stats[index].aFalse; 
-			//console.log("value aFalse before " + temp); 
-			stats[index].aFalse = Number(temp) + Number(1); 
-			//console.log("value aFalse after " + stats[index].aFalse); 
-			ans[1] = ans[1] +1; 
+function transformButtonsSelected(questions, questionNumber) {
+	//transform selected buttons
+	for (var i = 0; i < questions[questionNumber][1].length; i++) {
+		if (questions[questionNumber][1][i][4] == true) {
+			questions[questionNumber][1][i][3].style.background = "#727272";
+		} else if (questions[questionNumber][1][i][4] == false) {
+			questions[questionNumber][1][i][3].style.background = "#e2e8f0";
 		}
 	}
-	localStorage.setItem("statArray", JSON.stringify(stats)); 
-	localStorage.setItem("saveArrayPruefung", JSON.stringify(ans)); 
-} else {
-	for (var i = 0; i < aButtons.length; i++) {
-		if (aButtons[i].getAttribute("selected") == 'selected' && question.answers[i].trueOrFalse == true || aButtons[i].getAttribute("selected") == 'not_selected' && question.answers[i].trueOrFalse == false) {
-			ans[0] = ans[0]+1; 
-		
-		} else if (aButtons[i].getAttribute("selected") == 'selected' && question.answers[i].trueOrFalse == false || aButtons[i].getAttribute("selected") == 'not_selected' && question.answers[i].trueOrFalse == true) {
-			ans[1] = ans[1] +1; 
+}
+
+function checkAnswers(questions, questionNumber, htmlEl, category_name, subcategory_name) {
+	var aButtons = document.getElementsByClassName(htmlEl);
+	var statArray = localStorage.getItem("statArray");
+
+	var stats = JSON.parse(statArray);
+	stats[questionNumber][1] = questions[questionNumber][2];
+	stats[questionNumber][2] = questions[questionNumber][3];
+	stats[questionNumber][3] = 0;
+	stats[questionNumber][4] = 0;
+	for (var j = 0; j < aButtons.length; j++) {
+		if (questions[questionNumber][1][j][4] && questions[questionNumber][1][j][2] || !questions[questionNumber][1][j][4] && !questions[questionNumber][1][j][2]) {
+			stats[questionNumber][3] = stats[questionNumber][3] + 1;
+		} else if (!questions[questionNumber][1][j][4] && questions[questionNumber][1][j][2] || questions[questionNumber][1][j][4] && !questions[questionNumber][1][j][2]) {
+			stats[questionNumber][4] = stats[questionNumber][4] + 1;
 		}
+
 	}
-	localStorage.setItem("saveArrayPruefung", JSON.stringify(ans)); 
+	console.log(stats)
+	localStorage.setItem("statArray", JSON.stringify(stats));
 }
 
-}
 
-function setColor() {
-	if (this.getAttribute("selected") === "not_selected") {
-		this.setAttribute("selected", "selected"); 
-	} else if (this.getAttribute("selected") === "selected") {
-		this.setAttribute("selected", "not_selected"); 
-	}
-}
-
-function loadNextQuestion(questions, questionNumber, maxQuestion){
+function loadNextQuestion(questions, questionNumber, maxQuestion) {
 	fillAnswers('div_answer', questions, questionNumber, maxQuestion);
 }
 
+
 async function createStatArray() {
-	var statArray = await getStat();  
-	localStorage.setItem("statArray", JSON.stringify(statArray)); 
+	var statArray = new Array();
+
+	for (var i = 0; i < 10; i++) {
+		statArray[i] = new Array();
+		statArray[i][1] = null;
+		statArray[i][2] = null;
+		statArray[i][3] = 0;
+		statArray[i][4] = 0;
+	}
+	localStorage.setItem("statArray", JSON.stringify(statArray));
+	console.log(localStorage.getItem("statArray"));
 }
 
-async function getStat() {
-	const result = await $.ajax({
-		type: 'GET',
-		url: 'https://projektseminarlfrb.herokuapp.com/stats',
-		dataType: 'json',
-		success: function (data) {
-			console.log(JSON.stringify(data)); 
-			return data; 
-		},
-		error: function (result){ 
-			return null; 
-		}
-	});
-	return result; 
-}
-
-function createArrayPruefung() {
-	var arr = [0,0]; 
-	localStorage.setItem("saveArrayPruefung", JSON.stringify(arr)); 
-}
+/*function createArrayPruefung() {
+	var arr = [0, 0];
+	localStorage.setItem("saveArrayPruefung", JSON.stringify(arr));
+	console.log(localStorage.getItem("saveArrayPruefung"));
+}*/

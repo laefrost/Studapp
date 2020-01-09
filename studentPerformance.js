@@ -1,6 +1,6 @@
 function createUserPie() {
-    var saveArray = localStorage.getItem("saveArrayPruefung");
-    console.log(JSON.parse(saveArray))
+    var saveArray = generateData(); 
+
     
     new Chart(document.getElementById("chart_Student"), {
         type: 'pie',
@@ -8,8 +8,8 @@ function createUserPie() {
           labels: ["right", "wrong"],
           datasets: [{
             label: "Antworten richtig/falsch",
-            backgroundColor: ["#3e95cd", "#8e5ea2"],
-            data: JSON.parse(saveArray)
+            backgroundColor: ["#56b988", "#800000"],
+            data: saveArray
           }]
         },
         options: {
@@ -23,6 +23,20 @@ function createUserPie() {
 
 }
 
+function generateData() {
+  var saveArray = localStorage.getItem("statArray");
+  var arr = JSON.parse(saveArray);
+  console.log(arr);  
+  var result = [0,0]; 
+
+  for (var i =0; i < arr.length; i++) {
+    result[0] = result[0] + arr[i][3]; 
+    result[1] = result[1] + arr[i][4]; 
+  }
+  console.log(result); 
+  return result; 
+}
+
 async function createAvPie() {
     var avData = await loadAvPie(); 
     new Chart(document.getElementById("chart_Av"), {
@@ -31,11 +45,12 @@ async function createAvPie() {
         labels: ["right", "wrong"],
         datasets: [{
           label: "Antworten richtig/falsch",
-          backgroundColor: ["#3e95cd", "#8e5ea2"],
+          backgroundColor: ["#56b988", "#800000"],
           data: avData
         }]
       },
       options: {
+        responsive:true,
         title: {
           display: true,
           text: 'Durchschnittsperformance'
@@ -71,11 +86,42 @@ async function loadAvPie() {
 
 }
 
-function updateSeverData() {
-    var saveArray = localStorage.getItem("statArray");
-    var arr = JSON.parse(saveArray); 
-    console.log(arr.length)
+async function loadData() {
+  const result = await $.ajax({
+    type: 'GET',
+    url: 'https://projektseminarlfrb.herokuapp.com/stats',
+    dataType: 'json',
+    success: function (data) {
+        console.log(data); 
+    return data; 
+    },
+    error: function (result){ 
+        console.log("error" + error); 
+        return null; 
+    }
+  });
+  console.log(result); 
 
+  var saveArray = localStorage.getItem("statArray");
+  var arr = JSON.parse(saveArray);
+  console.log(arr);  
+
+  for (var i=0; i < arr.length; i++) {
+    index = result.findIndex(x => x.category_name ===arr[i][1] && x.subcategory_name === arr[i][2])
+    console.log(index); 
+    if (index != -1) {
+      result[index].aCorr = result[index].aCorr + arr[i][3]; 
+      result[index].aFalse = result[index].aFalse + arr[i][4];
+    }
+  }
+  console.log(result); 
+  updateSeverData(result); 
+}
+
+
+
+
+function updateSeverData(arr) {
     for (var i = 0; i < arr.length; i++) {
         console.log((arr[i]).aCorr);
         var id = (arr[i])._id; 

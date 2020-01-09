@@ -12,6 +12,16 @@
 	<script src="js/navigation.js"></script> 
 	<script src="studentPerformanceLernen.js"></script> 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<style>
+        .gradient {
+            background: linear-gradient(90deg, #939492 0%, #6c7597 100%);
+        }
+        
+        #menu-toggle:checked + #menu {
+            display: block;
+        }
+    </style>
+
   
 	<title>Quiz-Lernen</title>
   
@@ -57,11 +67,11 @@
 		</div>
 	
 	</header>
-	<div class="flex mb-4">
-		<div class="flex-1 w-1/2 h-12">
+	<div class="flex flex-wrap">
+		<div class="flex-1 h:-1/2 lg:w-1/2 xl:w-1/2 h-12 div_graph">
 			<canvas id="chart_Student">Deine Performance</canvas>
 		</div>
-		<div class="flex-1 w-1/2 h-12">
+		<div class="flex-1 h:-1/2 lg:w-1/2 xl:w-1/2 h-12 div_graph">
 			<canvas id="chart_Av">Durchschnitts-Performance</canvas>
 		</div>
 	  </div>
