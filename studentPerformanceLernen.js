@@ -66,7 +66,7 @@ async function loadAvPie() {
         return data; 
         },
         error: function (result){ 
-            console.log("error" + error); 
+            console.log("error" + result); 
             return null; 
         }
     });
