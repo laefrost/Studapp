@@ -1,11 +1,10 @@
 function loadData() {
+	console.log("loadData")
 	$.ajax({
 		type: 'GET',
 		url: 'https://projektseminarlfrb.herokuapp.com/categorys',
 		dataType: 'json',
 		success: function (data) {
-			//let questions = JSON.stringify(data); 
-			console.log(data);
 			if (data == undefined || data == null || data.length == 0) {
 				alert('Fehler beim Laden');
 				window.location.href = './index.html';
@@ -39,9 +38,6 @@ async function parseTestQuestions(jsonFile, maxQuestions, callback) {
 	console.log("parseTestQuestions")
 	var questions = [];
 	var json;
-
-	console.log("JsonFile : " + jsonFile);
-
 	check: for (var i = 0; i < maxQuestions; i++) {
 		var rndCat = Math.floor(Math.random() * jsonFile.length);
 		var subCatLength = jsonFile[rndCat].sub_categories.length;
@@ -80,7 +76,6 @@ async function parseTestQuestions(jsonFile, maxQuestions, callback) {
 			}
 		}
 	}
-	console.log(questions);
 	callback(questions);
 }
 
@@ -100,17 +95,10 @@ async function doAjax(cValue, sValue, i) {
 		$('#img_load').hide();
 		},*/
 		success: function (data) {
-			//console.log("ajax done"); 
-			//console.log(data); 
-			/*if (data !== null || data !== undefined || data.length == 0) {
-				fillQuestions(data, i); 
-			} else {
-				doAjax(cValue, sValue, i); 
-			}*/
-			//return data;
 		},
 		error: function (result) {
-			return null;
+			alert("Es gab einen Fehler: " + result)
+			window.location.href = './index.html';
 		}
 	});
 	return result;
@@ -121,15 +109,16 @@ function init(questions, maxQuestion) {
 	var time_in_minutes = 10;
 	start_countdown('div_clock', time_in_minutes);
 	var currentQuestion = 0;
-	console.log(questions);
 	fillAnswers('div_answer', questions, currentQuestion, maxQuestion);
 }
 
 function replace_question_text(string) {
+	console.log("replace_question_text");
 	document.getElementById('p_question').innerHTML = string;
 }
 
 function start_countdown(clockid, time_in_minutes) {
+	console.log("start_countdown"); 
 	//start the countdown
 	var current_time = Date.parse(new Date());
 	var deadline = new Date(current_time + time_in_minutes * 60 * 1000);
@@ -137,6 +126,7 @@ function start_countdown(clockid, time_in_minutes) {
 }
 
 function time_remaining(endtime) {
+	console.log("time_remaining")
 	var t = Date.parse(endtime) - Date.parse(new Date());
 	var seconds = Math.floor((t / 1000) % 60);
 	var minutes = Math.floor((t / 1000 / 60) % 60);
@@ -146,6 +136,7 @@ function time_remaining(endtime) {
 }
 
 function run_clock(id, endtime) {
+	console.log("run_clock"); 
 	var clock = document.getElementById(id);
 	function update_clock() {
 		var t = time_remaining(endtime);
@@ -160,12 +151,14 @@ function run_clock(id, endtime) {
 }
 
 function question_number(questionId, currentQuestion, maxQuestion) {
+	console.log("question_number"); 
 	var question = document.getElementById(questionId);
 	var nmb = currentQuestion + 1;
 	question.innerHTML = 'Frage ' + nmb + '/' + maxQuestion;
 }
 
 function checkButton(nextButtonText, backButton, currentQuestion, maxQuestion) {
+	console.log("checkButton")
 	//Button Text
 	if (currentQuestion == 0) {
 		backButton.style.display = 'none';
@@ -190,12 +183,12 @@ function fillAnswers(divID, questions, questionNumber, maxQuestion) {
 	replace_question_text(questions[questionNumber][0]);
 	for (var i = 0; i < 4; i++) {
 		if (answer === null) {
-			answer = '<div class="w-full mb-4 bg-gray-500 answer" selected="not_selected">' +
-				'<p id="u2009-2">' + questions[questionNumber][1][i][1] + '</p>' +
+			answer = '<div class="w-full mb-4 bg-gray-500 p-3 answer">' +
+				'<p id="u2009-2" class="break-words">' + questions[questionNumber][1][i][1] + '</p>' +
 				'</div>';
 		} else {
-			answer = answer + '<div class="w-full mb-4 bg-gray-500 answer" selected="not_selected">' +
-				'<p id="u2009-2">' + questions[questionNumber][1][i][1] + '</p>' +
+			answer = answer + '<div class="w-full mb-4 bg-gray-500 p-3 answer">' +
+				'<p id="u2009-2" class="break-words">' + questions[questionNumber][1][i][1] + '</p>' +
 				'</div>';
 		}
 	}
@@ -244,17 +237,19 @@ function fillAnswers(divID, questions, questionNumber, maxQuestion) {
 }
 
 function transformButtonsSelected(questions, questionNumber) {
+	console.log("transformButtonsSelected")
 	//transform selected buttons
 	for (var i = 0; i < questions[questionNumber][1].length; i++) {
 		if (questions[questionNumber][1][i][4] == true) {
-			questions[questionNumber][1][i][3].style.background = "#727272";
+			questions[questionNumber][1][i][3].style.background = "#c8c8c8";
 		} else if (questions[questionNumber][1][i][4] == false) {
 			questions[questionNumber][1][i][3].style.background = "#e2e8f0";
 		}
 	}
 }
 
-function checkAnswers(questions, questionNumber, htmlEl, category_name, subcategory_name) {
+function checkAnswers(questions, questionNumber, htmlEl) {
+	console.log("checkAnswers")
 	var aButtons = document.getElementsByClassName(htmlEl);
 	var statArray = localStorage.getItem("statArray");
 
@@ -271,17 +266,18 @@ function checkAnswers(questions, questionNumber, htmlEl, category_name, subcateg
 		}
 
 	}
-	console.log(stats)
 	localStorage.setItem("statArray", JSON.stringify(stats));
 }
 
 
 function loadNextQuestion(questions, questionNumber, maxQuestion) {
+	console.log("loadNextQuestion")
 	fillAnswers('div_answer', questions, questionNumber, maxQuestion);
 }
 
 
 async function createStatArray() {
+	console.log("createStatArray")
 	var statArray = new Array();
 
 	for (var i = 0; i < 10; i++) {
@@ -292,11 +288,4 @@ async function createStatArray() {
 		statArray[i][4] = 0;
 	}
 	localStorage.setItem("statArray", JSON.stringify(statArray));
-	console.log(localStorage.getItem("statArray"));
 }
-
-/*function createArrayPruefung() {
-	var arr = [0, 0];
-	localStorage.setItem("saveArrayPruefung", JSON.stringify(arr));
-	console.log(localStorage.getItem("saveArrayPruefung"));
-}*/

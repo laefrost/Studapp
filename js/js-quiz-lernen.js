@@ -106,12 +106,12 @@ function fillAnswers(answerDiv, questions, questionNumber) {
 
 	for (var j = 0; j < 4; j++) {
 		if (answer === null) {
-			answer = '<div class="w-full mb-4 answer" selected="not_selected">' +
-				'<div id="u2499-2" class="p_question">' + questions[questionNumber][1][j][1] + ' </div> <div class ="div_Img"> <image class="aImg" /> </div>' +
+			answer = '<div class="w-full mb-4 answer">' +
+				'<div class="p_question break-words pl-3 py-3 ">' + questions[questionNumber][1][j][1] + ' </div> <div class ="div_Img"> <image class="aImg" /> </div>' +
 				'</div>';
 		} else {
-			answer = answer + '<div class="w-full mb-4 answer" selected="not_selected">' +
-				'<div id="u2499-2" class="p_question">' + questions[questionNumber][1][j][1] + ' </div> <div class ="div_Img"> <image class="aImg" /> </div>' +
+			answer = answer + '<div class="w-full mb-4 answer">' +
+				'<div class="p_question break-words pl-3 py-3">' + questions[questionNumber][1][j][1] + ' </div> <div class ="div_Img"> <image class="aImg" /> </div>' +
 				'</div>';
 		}
 	}
@@ -188,7 +188,7 @@ function transformButtonsSelected(questions, questionNumber) {
 	console.log("transformButtonsSelected");
 	for (var i = 0; i < questions[questionNumber][1].length; i++) {
 		if (questions[questionNumber][1][i][4] == true) {
-			questions[questionNumber][1][i][3].style.background = "#727272";
+			questions[questionNumber][1][i][3].style.background = "#c8c8c8";
 		} else if (!questions[questionNumber][1][i][4]) {
 			questions[questionNumber][1][i][3].style.background = "#e2e8f0";
 		}

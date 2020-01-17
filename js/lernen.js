@@ -1,5 +1,4 @@
-//loads categories and subcategories from db
-function startStuff() {
+function loadData() {
 	console.log("startStuff")
 	$('#divLoadingImage').show();
 	$.ajax({
@@ -9,8 +8,8 @@ function startStuff() {
 		success: function (data) {
 			parseData(data);
 		},
-		error: function(err) {
-			console.log(err); 
+		error: function (err) {
+			console.log(err);
 			alert("Es gab einen Fehler beim Laden der Daten")
 		},
 		complete: function () {
@@ -20,7 +19,6 @@ function startStuff() {
 	})
 }
 
-//parses data 
 function parseData(data) {
 	console.log("parse data")
 	let json = JSON.parse(JSON.stringify(data))
@@ -34,8 +32,8 @@ function createElements(json) {
 	for (var i = 0; i < json.length; i++) {
 		var newCategory = document.createElement("li");
 		newCategory.setAttribute("selected", "false");
-		
-		newCategory.className = "newCategory font-bold";
+
+		newCategory.className = "newCategory font-bold break-words py-1 list-none";
 		var ul2 = document.createElement("ul");
 		newCategory.setAttribute("name", json[i].category_name);
 		ul2.className = "ul2";
@@ -47,7 +45,7 @@ function createElements(json) {
 		for (var j = 0; j < json[i].sub_categories.length; j++) {
 			var newSubcategory = document.createElement("li");
 			newSubcategory.innerHTML = json[i].sub_categories[j].subcategory_name;
-			newSubcategory.className = "subMenu font-normal ";
+			newSubcategory.className = "subMenu font-normal break-words pl-2 py-1";
 			newSubcategory.setAttribute("cat", json[i].category_name);
 			newSubcategory.setAttribute("selected", false)
 			newSubcategory.style.display = "none";
@@ -65,7 +63,6 @@ function getAllMenuItems(menuItemName, catItemName, buttonClassR) {
 	console.log("getAllMenuItems")
 	var menuItems = elements = document.getElementsByClassName(menuItemName);
 	var catItems = document.getElementsByClassName(catItemName);
-	console.log(catItems)
 	var menuItemsArray = new Array();
 
 	for (var i = 0; i < menuItems.length; i++) {
@@ -89,8 +86,6 @@ function getAllMenuItems(menuItemName, catItemName, buttonClassR) {
 			}
 		}
 	}
-
-
 	for (var i = 0; i < catItems.length; i++) {
 		catItems[i].onclick = function () {
 			if (this.getAttribute("selected") == "false") {
@@ -121,9 +116,6 @@ function getAllMenuItems(menuItemName, catItemName, buttonClassR) {
 			}
 		}
 	}
-
-
-	//register BUtton Start Regulär
 	var buttonStartR = document.getElementsByClassName(buttonClassR);
 	for (var i = 0; i < buttonStartR.length; i++) {
 		buttonStartR[i].onclick = function () {
@@ -139,7 +131,6 @@ function getAllMenuItems(menuItemName, catItemName, buttonClassR) {
 					category = menuItemsArray[i][3];
 				}
 			}
-			//nicht sicher ob noetig
 			if (counter > 1) {
 				alert("Bitte wählen Sie nur eine Kategorie aus.");
 			}

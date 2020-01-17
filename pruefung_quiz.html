@@ -3,14 +3,8 @@
  <head>
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<!--<meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
-	<meta name="generator" content="2018.1.0.386"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/> -->
-  
-	<script src="js-quiz-pruefung.js"></script>
-	<script src="parseJSON.js"></script> 
-	<script src="bundle.js"></script> 
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<script src="js/js-quiz-pruefung.js"></script>
 	<script src="js/navigation.js"></script> 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<style>
@@ -27,7 +21,6 @@
 	<title>Quiz-Lernen</title>
   
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="styles/quiz-pruefung.css" id="pagesheet"/>
 	<link href="styles/output.css" type="text/css" rel="stylesheet" />
   
  </head>
@@ -68,12 +61,12 @@
 		</div>
 	
 	</header>
- <div class="flex flex-wrap py-20">
+ <div class="flex flex-col flex-wrap pb-10">
       <div class="container mx-auto">
-       <h2 class="text-2xl font-bold mb-2 text-black">
+       <h2 class="text-2xl font-bold mb-2 pt-10 text-black">
           Prüfung
         </h2>
-		<h3 class="text-1xl mb-8 text-black" id = "h3_time">
+		<h3 class="text-2xl mb-8 font-bold text-black" id = "h3_time">
 			<div id="div_clock"> </div>
         </h3>
 		<h4 class="text-1xl mb-8 text-black" id = "h4_numb_questions">
@@ -81,14 +74,14 @@
 		</h4>
 	</div>
 	
-	<section class="flex-col container pt-4 mx-auto mt-2 rounded shadow-md bg-gray-300 rounded px-8 pt-6 pb-4 mb-4">
+	<section class="flex flex-col container pt-4 mx-auto mt-2 rounded shadow-md bg-gray-300 rounded px-8 pt-6 pb-4 mb-4">
 		<div id = "box_pru">
 		<div class="flex flex-wrap">
 			<div class="w-full" id = "div_question">
-				<p class="font-bold" id="p_question"></p>
+				<p class="font-bold break-words pb-4" id="p_question"></p>
 			</div>
 		</div>
-		<div class="flex flex-wrap" id="div_answer">
+		<div class="flex flex-col flex-wrap" id="div_answer">
 		</div>
 		<!--<div id = "divLodaingGif" style="width:100%;height:0;padding-bottom:100%;position:relative;"><iframe src="https://giphy.com/embed/DQTCVWxe4X1cI" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/loop-trump-loading-DQTCVWxe4X1cI">via GIPHY</a></p>
 </div>-->
@@ -99,14 +92,14 @@
 		</div>
 		
 		<button class="btn_back text-white font-bold py-2 px-4 rounded-full" id="btn_back">
-		   <p id="backBtnText">Zurück</p>
+		   <p id="backBtnText">Bla</p>
         </button>
 		</div>
 		</section>
 		</div>
        
     </section>
-	<script type="text/javascript">
+	<script>
 		$(document).ready(function(){
 		loadData(); 
 		})
