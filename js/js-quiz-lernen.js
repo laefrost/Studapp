@@ -165,7 +165,7 @@ function fillAnswers(answerDiv, questions, questionNumber) {
 				else if (!questions[questionNumber][1][i][2]) {
 					questions[questionNumber][1][i][3].style.background = "#d9b3b3";
 				}
-
+				console.log(aButtons[i])
 			}
 			btn_Abgeben.innerHTML = "Weiter";
 

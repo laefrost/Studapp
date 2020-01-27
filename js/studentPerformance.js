@@ -10,7 +10,7 @@ function createUserPie() {
         labels: ["right", "wrong"],
         datasets: [{
           label: "Antworten richtig/falsch",
-          backgroundColor: ["#4299E1", "#800000"],
+          backgroundColor: ["#90CDF4", "#800000"],
           data: saveArray
         }]
       },
@@ -37,7 +37,7 @@ function generateData() {function createUserPie() {
         labels: ["right", "wrong"],
         datasets: [{
           label: "Antworten richtig/falsch",
-          backgroundColor: ["#4299E1", "#800000"],
+          backgroundColor: ["#90CDF4", "#800000"],
           data: saveArray
         }]
       },

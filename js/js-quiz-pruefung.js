@@ -30,6 +30,7 @@ function generateArray(jsonFile) {
 	var maxQuestion = 10;
 	parseTestQuestions(jsonFile, maxQuestion, function (response) {
 		questions = response;
+
 		init(questions, maxQuestion);
 	});
 }
@@ -100,10 +101,10 @@ async function doAjax(cValue, sValue, i) {
 			"subcategory_name": sValue
 		},
 		dataType: 'json',
-		/*beforeSend: function(){
-		$('#img_load').show();
+		beforeSend: function(){
+		$('#divLoadingImage').show();
 		},
-		complete: function(){
+		/*complete: function(){
 		$('#img_load').hide();
 		},*/
 		success: function (data) {
@@ -117,6 +118,8 @@ async function doAjax(cValue, sValue, i) {
 }
 
 function init(questions, maxQuestion) {
+	void function(){
+		$('#divLoadingImage').hide();}
 	console.log('init');
 	var time_in_minutes = 10;
 	start_countdown('div_clock', time_in_minutes);
