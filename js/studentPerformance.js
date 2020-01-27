@@ -70,8 +70,8 @@ function generateData() {
   }
 }
 
-async function createAvPie() {
-  console.log("createAvPie")
+/*async function createAvPie() {
+  console.log("createAvPiesdfsdfsdfdsfdsfdsdsfdsf")
   var avData = await loadAvPie();
   if (avData == null || avData == undefined | (avData[0] == 0 && avData[1] == 0)) {
     console.log("avPie kann nicht dargestellt werden " + avData);
@@ -96,7 +96,7 @@ async function createAvPie() {
       }
     });
   }
-}
+}*/
 
 async function loadAvPie() {
   console.log("loadAvPie")
@@ -203,7 +203,7 @@ async function createAvPie() {
         labels: ["right", "wrong"],
         datasets: [{
           label: "Antworten richtig/falsch",
-          backgroundColor: ["#56b988", "#800000"],
+          backgroundColor: ["#90CDF4", "#800000"],
           data: avData
         }]
       },

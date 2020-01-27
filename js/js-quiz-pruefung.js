@@ -89,6 +89,7 @@ async function parseTestQuestions(jsonFile, maxQuestions, callback) {
 		}
 	}
 	console.log(questions)
+		document.getElementById("divLoadingImage").style.display = "none";
 	callback(questions);
 }
 
@@ -118,8 +119,6 @@ async function doAjax(cValue, sValue, i) {
 }
 
 function init(questions, maxQuestion) {
-	void function(){
-		$('#divLoadingImage').hide();}
 	console.log('init');
 	var time_in_minutes = 10;
 	start_countdown('div_clock', time_in_minutes);
