@@ -19,7 +19,7 @@ ul.lernen {
 
 .btn_weiter{
 	-webkit-appearance: button;
-	background-color: #56b988;
+	background-color: #4299E1;
 	overflow: visible;
 	font-family: inherit; /* 1 */
 	font-size: 100%; /* 1 */
@@ -35,7 +35,7 @@ ul.lernen {
 
 .btn_weiter:hover{
 	background-color: #fff; 
-	color:#56b988;
+	color:#4299E1;
 	
 }
 

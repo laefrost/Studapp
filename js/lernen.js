@@ -43,6 +43,10 @@ function createElements(json) {
 		newCategory.appendChild(ul2);
 
 		for (var j = 0; j < json[i].sub_categories.length; j++) {
+			if (json[i].sub_categories[j].subcategory_name === undefined) {
+				console.log("undefined entry")
+			} else {
+				console.log(json[i].sub_categories[j])
 			var newSubcategory = document.createElement("li");
 			newSubcategory.innerHTML = json[i].sub_categories[j].subcategory_name;
 			newSubcategory.className = "subMenu font-normal break-words pl-2 py-1";
@@ -50,6 +54,7 @@ function createElements(json) {
 			newSubcategory.setAttribute("selected", false)
 			newSubcategory.style.display = "none";
 			ul2.appendChild(newSubcategory);
+			}
 		};
 	}
 

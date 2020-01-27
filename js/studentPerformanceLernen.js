@@ -11,7 +11,7 @@ function createUserPie() {
         labels: ["right", "wrong"],
         datasets: [{
           label: "Antworten richtig/falsch",
-          backgroundColor: ["#56b988", "#800000"],
+          backgroundColor: ["#90CDF4", "#800000"],
           data: saveArray
         }]
       },
@@ -38,7 +38,7 @@ async function createAvPie() {
         labels: ["right", "wrong"],
         datasets: [{
           label: "Antworten richtig/falsch",
-          backgroundColor: ["#56b988", "#800000"],
+          backgroundColor: ["#90CDF4", "#800000"],
           data: avData
         }]
       },

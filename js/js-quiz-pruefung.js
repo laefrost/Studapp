@@ -38,7 +38,8 @@ async function parseTestQuestions(jsonFile, maxQuestions, callback) {
 	console.log("parseTestQuestions")
 	var questions = [];
 	var json;
-	check: for (var i = 0; i < maxQuestions; i++) {
+	create: for (var i = 0; i < maxQuestions; i++) {
+		console.log("check " + i); 
 		var rndCat = Math.floor(Math.random() * jsonFile.length);
 		var subCatLength = jsonFile[rndCat].sub_categories.length;
 		var rndSubCat = Math.floor(Math.random() * subCatLength);
@@ -50,17 +51,26 @@ async function parseTestQuestions(jsonFile, maxQuestions, callback) {
 
 		if (json.length === 0) {
 			i--;
-			continue check;
+			console.log("json length was 0")
+			continue create;
 		} else {
-
 			var questLength = json.length;
 			var rndQuest = Math.floor(Math.random() * questLength);
-
+			if (questions != undefined) {
+				check:for (var v = 0; v < questions.length-1; v++) {
+					if (questions[v][4] == json[rndQuest]._id) {
+						console.log("Double Quest Found " + json[rndQuest]);
+						i--; 
+						continue create; 
+					}
+				}
+			}
 			var countAnswers = json[rndQuest].answers.length;
 			questions[i][0] = json[rndQuest].question;
 			questions[i][1] = new Array();
 			questions[i][2] = json[rndQuest].category_name;
 			questions[i][3] = json[rndQuest].subcategory_name;
+			questions[i][4] = json[rndQuest]._id;
 
 			for (var j = 0; j < countAnswers; j++) {
 				questions[i][1][j] = new Array();
@@ -74,8 +84,10 @@ async function parseTestQuestions(jsonFile, maxQuestions, callback) {
 				}
 				questions[i][1][j][4] = false;
 			}
+			console.log("question an Stelle  " + i + questions[i]); 
 		}
 	}
+	console.log(questions)
 	callback(questions);
 }
 
@@ -118,7 +130,7 @@ function replace_question_text(string) {
 }
 
 function start_countdown(clockid, time_in_minutes) {
-	console.log("start_countdown"); 
+	console.log("start_countdown");
 	//start the countdown
 	var current_time = Date.parse(new Date());
 	var deadline = new Date(current_time + time_in_minutes * 60 * 1000);
@@ -136,14 +148,15 @@ function time_remaining(endtime) {
 }
 
 function run_clock(id, endtime) {
-	console.log("run_clock"); 
+	console.log("run_clock");
 	var clock = document.getElementById(id);
 	function update_clock() {
 		var t = time_remaining(endtime);
-		clock.innerHTML = t.minutes + ':' + t.seconds;
+		clock.innerHTML = ((t.minutes).toString()).padStart(2, '0') + ':' + ((t.seconds).toString()).padStart(2, '0');
 		if (t.total <= 0) {
-			localStorage.setItem("Quiz", JSON.stringify(questions));
-			window.location.href = '/ergebnis.php';
+			alert("Zeit abgelaufen")
+			clearInterval(timeinterval);
+			window.location.href = 'studentPerformance.html';
 		}
 	}
 	update_clock(); // run function once at first to avoid delay
@@ -151,7 +164,7 @@ function run_clock(id, endtime) {
 }
 
 function question_number(questionId, currentQuestion, maxQuestion) {
-	console.log("question_number"); 
+	console.log("question_number");
 	var question = document.getElementById(questionId);
 	var nmb = currentQuestion + 1;
 	question.innerHTML = 'Frage ' + nmb + '/' + maxQuestion;
@@ -223,7 +236,7 @@ function fillAnswers(divID, questions, questionNumber, maxQuestion) {
 		questionNumber++;
 		var finish = checkButton(btnForth, btnBack, questionNumber, maxQuestion);
 		if (finish) {
-			window.location.href = '/studentPerformance.html';
+			window.location.href = 'studentPerformance.html';
 		} else {
 			loadNextQuestion(questions, questionNumber, maxQuestion);
 		}
