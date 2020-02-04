@@ -35,7 +35,7 @@ function callPruefungPage() {
 }
 
 function callStudentsPerformancePage() {
-    window.location = "studentPerformance.html";
+    window.location = "performance.html";
 }
 
 function callUsageOverviewPage() {
